@@ -1,44 +1,32 @@
-// ================================
-// URL du Google Apps Script (BASE DE DONNÉES)
-// ================================
 const GOOGLE_SCRIPT_URL =
-  "https://script.google.com/macros/s/AKfycbz1_4oRKGtcz-Uy43x5B9-Zlx6Zb7usqoP6tYxZPYwcl4FnJqoPV2_eVBoJYLqL1tx_bQ/exec";
+  "https://script.google.com/macros/s/AKfycbz1_4oRKGtcz-Uy43x5B9-ZIx6Zb7usqoP6tYxZPYwcl4FnJqoPV2_eVBoJYLqL1tx_bQ/exec";
 
-// ================================
-// Initialisation
-// ================================
-window.onload = () => {
-    const now = new Date();
-    document.getElementById('date').value = now.toISOString().split('T')[0];
-};
+document.getElementById("callForm").addEventListener("submit", function (e) {
+  e.preventDefault();
 
-// ================================
-// Enregistrement d'un appel (WEB PARTAGÉ)
-// ================================
-document.getElementById('callForm').addEventListener('submit', function (e) {
-    e.preventDefault();
+  const formData = new FormData();
+  formData.append("utilisateur", document.getElementById("utilisateur").value);
+  formData.append("date", document.getElementById("date").value);
+  formData.append("nom", document.getElementById("nom").value);
+  formData.append("telephone", document.getElementById("telephone").value);
+  formData.append("code_postal", document.getElementById("code_postal").value);
+  formData.append("adresse", document.getElementById("adresse").value);
+  formData.append("commentaire", document.getElementById("commentaire").value);
+  formData.append(
+    "confirme",
+    document.getElementById("confirme").checked ? "Oui" : "Non"
+  );
 
-    const data = {
-        date: document.getElementById('date').value,
-        nom: document.getElementById('nom').value,
-        telephone: document.getElementById('telephone').value,
-        code_postal: document.getElementById('code_postal').value,
-        adresse: document.getElementById('adresse').value,
-        commentaire: document.getElementById('commentaire').value,
-        confirme: document.getElementById('confirme').checked ? "Oui" : "Non"
-    };
-
-    fetch(GOOGLE_SCRIPT_URL, {
-        method: "POST",
-        mode: "no-cors",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify(data)
+  fetch(GOOGLE_SCRIPT_URL, {
+    method: "POST",
+    body: formData
+  })
+    .then(() => {
+      alert("✅ Appel enregistré dans le registre commun");
+      document.getElementById("callForm").reset();
+    })
+    .catch((err) => {
+      alert("❌ Erreur lors de l’envoi");
+      console.error(err);
     });
-
-    alert("✅ Appel enregistré dans le registre commun");
-
-    document.getElementById('callForm').reset();
-    document.getElementById('date').value = new Date().toISOString().split('T')[0];
 });
