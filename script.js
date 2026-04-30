@@ -2,7 +2,7 @@
 // URL du Google Apps Script (BASE DE DONNÉES)
 // ================================
 const GOOGLE_SCRIPT_URL =
-  "https://script.google.com/macros/s/AKfycbyjQqTvSD3LUVzwUXoQbwW4kxIjGtye68aJXBoDVy9H/dev";
+  "https://script.google.com/macros/s/AKfycbwJB1aejrukTEaFkRq2_QF2JsTYdyGOlWuIg_UcYlDPaQ2-9jlZzO9gX7WkmKG372Dwrw/exec";
 
 // ================================
 // Initialisation
