@@ -11,183 +11,42 @@
 }
 
 body {
-  font-family: Arial, sans-serif;
+  font-family: "Segoe UI", Arial;
   background: var(--bg);
   margin: 0;
   padding: 30px;
 }
 
 .container {
-  max-width: 900px;
+  max-width: 950px;
   margin: auto;
   background: white;
-  padding: 25px 35px;
   border-radius: 12px;
-  box-shadow: 0 5px 10px rgba(0,0,0,0.1);
+  padding: 30px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.1);
 }
 
 .header {
   display: flex;
   align-items: center;
-  gap: 20px;
-  margin-bottom: 20px;
+  gap: 15px;
+  margin-bottom: 25px;
 }
 
 .logo {
-  height: 70px;
-  border-radius: 6px;
+  height: 65px;
 }
 
-h1 {
-  margin: 0;
+.title {
+  font-size: 24px;
+  font-weight: bold;
   color: var(--primary);
 }
 
-h2 {
-  margin-top: 10px;
+.subtitle {
+  font-size: 18px;
+  margin-bottom: 20px;
 }
 
 .form-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 15px;
-}
-
-.full {
-  grid-column: 1 / -1;
-}
-
-label {
-  font-weight: bold;
-  font-size: 14px;
-}
-
-input, textarea, select {
-  width: 100%;
-  padding: 10px;
-  border-radius: 6px;
-  border: 1px solid #ccc;
-}
-
-textarea {
-  min-height: 80px;
-}
-
-.btn {
-  background: var(--primary);
-  color: white;
-  padding: 12px;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-  font-weight: bold;
-}
-
-.btn:hover {
-  background: #124016;
-}
-
-.checkbox {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-</style>
-
-</head>
-
-<body>
-
-<div class="container">
-
-<div class="header">
-  <img src="logo.png" class="logo" onerror="this.style.display='none'">
-  
-<div style="display:flex; align-items:center; gap:20px; margin-bottom:20px;">
-
-  <img src="logo.png" class="logo"
-       style="height:60px;"
-       onerror="this.style.display='none'">
-
-  <h2 style="margin:0; color:#1b5e20;">
-    Registre des appels clients
-  </h2>
-
-</div>
-
-<h2>Enregistrer un appel</h2>
-
-<form method="POST"
-      action="https://script.google.com/macros/s/AKfycbyoqQPBFc42_hIe-1RvcvgojYiYGE9ie07P70t8WroyrCBBmaapimXeHbrbanWYMFAYow/exec"
-      target="hidden_iframe">
-
-<div class="form-grid">
-
-<div>
-<label>Utilisateur</label>
-<select name="utilisateur" required>
-  <option value="">-- Choisir --</option>
-  <option>Mamadou</option>
-  <option>Daby</option>
-  <option>Yacouba</option>
-</select>
-</div>
-
-<div>
-<label>Date</label>
-<input type="date" name="date" required>
-</div>
-
-<div>
-<label>Nom</label>
-<input type="text" name="nom">
-</div>
-
-<div>
-<label>Téléphone</label>
-<input type="text" name="telephone">
-</div>
-
-<div>
-<label>Code postal</label>
-<input type="text" name="code_postal">
-</div>
-
-<div>
-<label>Adresse</label>
-<input type="text" name="adresse">
-</div>
-
-<div class="full">
-<label>Commentaire</label>
-<textarea name="commentaire"></textarea>
-</div>
-
-<div class="checkbox full">
-<input type="checkbox" name="confirme" value="Oui">
-<label>Confirmé</label>
-</div>
-
-<div class="full">
-<button class="btn">Enregistrer</button>
-</div>
-
-</div>
-
-</form>
-
-<iframe name="hidden_iframe" style="display:none;"></iframe>
-
-</div>
-
-<script>
-document.querySelector("form").addEventListener("submit", function () {
-  setTimeout(() => {
-    alert("✅ Appel enregistré !");
-    this.reset();
-  }, 500);
-});
-</script>
-
-</body>
-</html>
