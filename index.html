@@ -5,42 +5,61 @@
 <title>Registre des appels</title>
 
 <style>
+:root {
+  --primary: #1b5e20;
+  --bg: #f4f7f6;
+}
+
 body {
-    font-family: Arial;
-    background: #f4f7f6;
-    padding: 20px;
+  font-family: Arial;
+  background: var(--bg);
+  margin: 0;
+  padding: 20px;
 }
 
 .container {
-    max-width: 900px;
-    margin: auto;
-    background: white;
-    padding: 25px;
-    border-radius: 10px;
+  max-width: 900px;
+  margin: auto;
+  background: white;
+  padding: 30px;
+  border-radius: 10px;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.logo {
+  height: 70px;
 }
 
 h1 {
-    color: green;
+  color: var(--primary);
 }
 
 label {
-    display: block;
-    margin-top: 10px;
-    font-weight: bold;
+  display: block;
+  margin-top: 10px;
+  font-weight: bold;
 }
 
 input, textarea, select {
-    width: 100%;
-    margin-top: 5px;
-    margin-bottom: 10px;
-    padding: 8px;
+  width: 100%;
+  padding: 10px;
+  margin-top: 5px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
 }
+
 button {
-    background: green;
-    color: white;
-    padding: 10px;
-    border: none;
-    cursor: pointer;
+  margin-top: 15px;
+  background: var(--primary);
+  color: white;
+  padding: 12px;
+  border: none;
+  cursor: pointer;
 }
 </style>
 
@@ -50,10 +69,11 @@ button {
 
 <div class="container">
 
-<h1>Registre des appels clients</h1>
+<div class="header">
+  <img src="logo.png" class="logo">
+  <h1>Registre des appels clients</h1>
+</div>
+
 <h2>Enregistrer un appel</h2>
 
-<!-- ✅ FORMULAIRE CORRECT -->
-<form id="callForm"
-      action="https://script.google.com/macros/s/AKfycbyoqQPBFc42_hIe-1RvcvgojYiYGE9ie07P70t8WroyrCBBmaapimXeHbrbanWYMFAYow/exec"
-      method="POST"
+<!-- ✅ FORMULAIRE PROPRE -->
