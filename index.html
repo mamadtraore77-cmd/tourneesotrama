@@ -122,9 +122,11 @@ button:hover {
 <label>Commentaire</label>
 <textarea name="commentaire"></textarea>
 
-<div class="full" style="display:flex; align-items:center; gap:10px;">
-  <input type="checkbox" name="confirme" value="Oui">
-  <label>Confirmé</label>
+<div class="full" style="display:flex; align-items:center; gap:10px; margin-top:10px;">
+  <label style="display:flex; align-items:center; gap:10px;">
+    <input type="checkbox" name="confirme" value="Oui">
+    Confirmé
+  </label>
 </div>
 
 
@@ -135,10 +137,14 @@ button:hover {
 <h2 style="margin-top:30px;">📊 Historique des appels</h2>
 
 <iframe 
-  src="https://docs.google.com/spreadsheets/d/e/2PACX-1vQ7xSD9eMCnQNSeDFpxWYCy2EFgaWzs47_ZC5b1vJ2dcetXUaVVokT9uw2_VAf1GfShk1OzB0Qy7t_Q/pubhtml"
-  width="100%" 
-  height="400"
-  style="border:none; border-radius:10px;">
+  src="COLLE_ICI_TON_LIEN_GOOGLE_SHEET"
+  style="
+    width:100%;
+    height:400px;
+    border:none;
+    border-radius:10px;
+    background:white;
+  ">
 </iframe>
 ``
 <iframe name="hidden_iframe" style="display:none;"></iframe>
