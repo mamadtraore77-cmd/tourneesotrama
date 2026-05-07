@@ -1,5 +1,5 @@
 const GOOGLE_SCRIPT_URL =
-  "https://script.google.com/macros/s/AKfycbz1_4oRKGtcz-Uy43x5B9-ZIx6Zb7usqoP6tYxZPYwcl4FnJqoPV2_eVBoJYLqL1tx_bQ/exec";
+  https://script.google.com/macros/s/AKfycbyoqQPBFc42_hIe-1RvcvgojYiYGE9ie07P70t8WroyrCBBmaapimXeHbrbanWYMFAYow/exec;
 
 document.getElementById("callForm").addEventListener("submit", function (e) {
   e.preventDefault();
