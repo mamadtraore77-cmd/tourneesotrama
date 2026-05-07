@@ -19,14 +19,12 @@ document.getElementById("callForm").addEventListener("submit", function (e) {
 
   fetch(GOOGLE_SCRIPT_URL, {
     method: "POST",
-    body: data
-  })
-    .then(() => {
-      alert("✅ Appel enregistré");
-      document.getElementById("callForm").reset();
-    })
-    .catch((err) => {
-      console.error(err);
-      alert("❌ Erreur d’envoi");
-    });
+    body: data,
+    mode: "no-cors"   // ✅ CRUCIAL
+  });
+
+  alert("✅ Appel enregistré");
+
+  document.getElementById("callForm").reset();
 });
+``
