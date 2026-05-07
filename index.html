@@ -5,66 +5,42 @@
 <title>Registre des appels</title>
 
 <style>
-:root {
-  --primary: #1b5e20;
-  --bg: #f4f7f6;
-}
-
 body {
-  font-family: Arial;
-  background: var(--bg);
-  padding: 20px;
+    font-family: Arial;
+    background: #f4f7f6;
+    padding: 20px;
 }
 
 .container {
-  max-width: 900px;
-  margin: auto;
-  background: white;
-  padding: 30px;
-  border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-}
-
-.header {
-  display: flex;
-  align-items: center;
-  margin-bottom: 20px;
-}
-
-.logo {
-  height: 70px;
-  margin-right: 20px;
+    max-width: 900px;
+    margin: auto;
+    background: white;
+    padding: 25px;
+    border-radius: 10px;
 }
 
 h1 {
-  color: var(--primary);
+    color: green;
 }
 
 label {
-  font-weight: bold;
-  margin-top: 10px;
-  display: block;
+    display: block;
+    margin-top: 10px;
+    font-weight: bold;
 }
 
 input, textarea, select {
-  width: 100%;
-  padding: 10px;
-  margin: 5px 0 15px;
-  border-radius: 5px;
-  border: 1px solid #ccc;
+    width: 100%;
+    margin-top: 5px;
+    margin-bottom: 10px;
+    padding: 8px;
 }
 
 button {
-  background: var(--primary);
-  color: white;
-  padding: 10px;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-}
-
-button:hover {
-  background: #124016;
+    background: green;
+    color: white;
+    padding: 10px;
+    border: none;
 }
 </style>
 
@@ -74,5 +50,15 @@ button:hover {
 
 <div class="container">
 
-<div class="header">
-  <img src="logo.png" class="logo" onerror="this.style.display='none'">
+<h1>Registre des appels clients</h1>
+
+<h2>Enregistrer un appel</h2>
+
+<!-- ✅ FORMULAIRE CORRECT -->
+<form id="callForm"
+      action="https://script.google.com/macros/s/AKfycbyoqQPBFc42_hIe-1RvcvgojYiYGE9ie07P70t8WroyrCBBmaapimXeHbrbanWYMFAYow/exec"
+      method="POST"
+      target="hidden_iframe">
+
+<label>Utilisateur</label>
+<select name="utilisateur">
