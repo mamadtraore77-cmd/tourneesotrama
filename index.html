@@ -2,64 +2,31 @@
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
-<title>Registre des appels</title>
+<title>Registre appels</title>
 
 <style>
-:root {
-  --primary: #1b5e20;
-  --bg: #f4f7f6;
-}
-
 body {
   font-family: Arial;
-  background: var(--bg);
-  margin: 0;
+  background: #f4f7f6;
   padding: 20px;
 }
-
 .container {
-  max-width: 900px;
+  max-width: 600px;
   margin: auto;
   background: white;
-  padding: 30px;
+  padding: 20px;
   border-radius: 10px;
 }
-
-.header {
-  display: flex;
-  align-items: center;
-  gap: 20px;
-}
-
-.logo {
-  height: 70px;
-}
-
-h1 {
-  color: var(--primary);
-}
-
-label {
-  display: block;
-  margin-top: 10px;
-  font-weight: bold;
-}
-
-input, textarea, select {
+input, select, textarea {
   width: 100%;
-  padding: 10px;
-  margin-top: 5px;
-  border-radius: 5px;
-  border: 1px solid #ccc;
+  margin: 10px 0;
+  padding: 8px;
 }
-
 button {
-  margin-top: 15px;
-  background: var(--primary);
+  background: green;
   color: white;
-  padding: 12px;
+  padding: 10px;
   border: none;
-  cursor: pointer;
 }
 </style>
 
@@ -69,11 +36,62 @@ button {
 
 <div class="container">
 
-<div class="header">
-  <img src="logo.png" class="logo">
-  <h1>Registre des appels clients</h1>
+<h2>Registre des appels</h2>
+
+<!-- ✅ FORMULAIRE CORRECT (IMPORTANT) -->
+<form 
+  method="POST"
+  action="https://script.google.com/macros/s/AKfycbyoqQPBFc42_hIe-1RvcvgojYiYGE9ie07P70t8WroyrCBBmaapimXeHbrbanWYMFAYow/exec"
+  target="hidden_iframe"
+  id="callForm"
+>
+
+<label>Utilisateur</label>
+<select name="utilisateur">
+  <option>Mamadou</option>
+  <option>Daby</option>
+  <option>Yacouba</option>
+</select>
+
+<label>Date</label>
+<input type="date" name="date" required>
+
+<label>Nom</label>
+<input type="text" name="nom">
+
+<label>Téléphone</label>
+<input type="text" name="telephone">
+
+<label>Code postal</label>
+<input type="text" name="code_postal">
+
+<label>Adresse</label>
+<input type="text" name="adresse">
+
+<label>Commentaire</label>
+<textarea name="commentaire"></textarea>
+
+<label>
+  <input type="checkbox" name="confirme" value="Oui">
+  Confirmé
+</label>
+
+<button type="submit">Enregistrer</button>
+
+</form>
+
+<!-- ✅ Evite redirection -->
+<iframe name="hidden_iframe" style="display:none;"></iframe>
+
 </div>
 
-<h2>Enregistrer un appel</h2>
+<script>
+document.getElementById("callForm").addEventListener("submit", function () {
+  setTimeout(() => {
+    alert("✅ Appel enregistré !");
+  }, 300);
+});
+</script>
 
-<!-- ✅ FORMULAIRE PROPRE -->
+</body>
+</html>
