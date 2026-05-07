@@ -13,7 +13,6 @@
 body {
   font-family: Arial;
   background: var(--bg);
-  margin: 0;
   padding: 20px;
 }
 
@@ -35,43 +34,33 @@ body {
 .logo {
   height: 70px;
   margin-right: 20px;
-  background: white;
-  padding: 5px;
-  border-radius: 5px;
 }
 
 h1 {
   color: var(--primary);
-  margin: 0;
 }
 
 label {
   font-weight: bold;
-  display: block;
   margin-top: 10px;
+  display: block;
 }
 
 input, textarea, select {
   width: 100%;
   padding: 10px;
-  margin-top: 5px;
-  border: 1px solid #ccc;
+  margin: 5px 0 15px;
   border-radius: 5px;
-}
-
-textarea {
-  min-height: 80px;
+  border: 1px solid #ccc;
 }
 
 button {
   background: var(--primary);
   color: white;
-  padding: 12px;
+  padding: 10px;
   border: none;
   border-radius: 5px;
-  margin-top: 15px;
   cursor: pointer;
-  font-weight: bold;
 }
 
 button:hover {
@@ -85,13 +74,5 @@ button:hover {
 
 <div class="container">
 
-<!-- ✅ HEADER AVEC LOGO -->
 <div class="header">
   <img src="logo.png" class="logo" onerror="this.style.display='none'">
-  <h1>Registre des appels clients</h1>
-</div>
-
-<h2>Enregistrer un appel</h2>
-
-<!-- ✅ FORMULAIRE CONNECTÉ -->
-<form id="callForm"
