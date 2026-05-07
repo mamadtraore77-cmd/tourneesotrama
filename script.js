@@ -4,29 +4,29 @@ const GOOGLE_SCRIPT_URL =
 document.getElementById("callForm").addEventListener("submit", function (e) {
   e.preventDefault();
 
-  const formData = new FormData();
-  formData.append("utilisateur", document.getElementById("utilisateur").value);
-  formData.append("date", document.getElementById("date").value);
-  formData.append("nom", document.getElementById("nom").value);
-  formData.append("telephone", document.getElementById("telephone").value);
-  formData.append("code_postal", document.getElementById("code_postal").value);
-  formData.append("adresse", document.getElementById("adresse").value);
-  formData.append("commentaire", document.getElementById("commentaire").value);
-  formData.append(
+  const data = new URLSearchParams();
+  data.append("utilisateur", document.getElementById("utilisateur").value);
+  data.append("date", document.getElementById("date").value);
+  data.append("nom", document.getElementById("nom").value);
+  data.append("telephone", document.getElementById("telephone").value);
+  data.append("code_postal", document.getElementById("code_postal").value);
+  data.append("adresse", document.getElementById("adresse").value);
+  data.append("commentaire", document.getElementById("commentaire").value);
+  data.append(
     "confirme",
     document.getElementById("confirme").checked ? "Oui" : "Non"
   );
 
   fetch(GOOGLE_SCRIPT_URL, {
     method: "POST",
-    body: formData
+    body: data
   })
     .then(() => {
-      alert("✅ Appel enregistré dans le registre commun");
+      alert("✅ Appel enregistré");
       document.getElementById("callForm").reset();
     })
     .catch((err) => {
-      alert("❌ Erreur lors de l’envoi");
       console.error(err);
+      alert("❌ Erreur d’envoi");
     });
 });
