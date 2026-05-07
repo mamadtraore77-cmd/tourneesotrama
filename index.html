@@ -35,7 +35,6 @@ input, textarea, select {
     margin-bottom: 10px;
     padding: 8px;
 }
-
 button {
     background: green;
     color: white;
@@ -52,20 +51,9 @@ button {
 <div class="container">
 
 <h1>Registre des appels clients</h1>
-
 <h2>Enregistrer un appel</h2>
 
+<!-- ✅ FORMULAIRE CORRECT -->
 <form id="callForm"
       action="https://script.google.com/macros/s/AKfycbyoqQPBFc42_hIe-1RvcvgojYiYGE9ie07P70t8WroyrCBBmaapimXeHbrbanWYMFAYow/exec"
       method="POST"
-      target="hidden_iframe">
-
-<label>Utilisateur</label>
-<select name="utilisateur" required>
-  <option value="">-- Choisir --</option>
-  <option>Mamadou</option>
-  <option>Daby</option>
-  <option>Yacouba</option>
-</select>
-
-<label>Date</label>
