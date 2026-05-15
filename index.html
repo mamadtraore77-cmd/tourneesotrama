@@ -190,45 +190,88 @@ td {
 </div>
 
 <script>
-const URL = "https://script.google.com/macros/s/AKfycbyoqQPBFc42_hIe-1RvcvgojYiYGE9ie07P70t8WroyrCBBmaapimXeHbrbanWYMFAYow/exec";
+const EXEC_URL = "https://script.google.com/macros/s/AKfycbyoqQPBFc42_hIe-1RvcvgojYiYGE9ie07P70t8WroyrCBBmaapimXeHbrbanWYMFAYow/exec";
 
-function chargerDonnees() {
-  fetch(URL)
-    .then(res => res.json())
-    .then(data => {
-      const tbody = document.querySelector("#table tbody");
-      tbody.innerHTML = "";
+function renderData(data) {
+  const tbody = document.querySelector("#table tbody");
+  tbody.innerHTML = "";
 
-      data.slice(1).reverse().forEach(row => {
+  // data[0] = headers
+  const rows = data.slice(1).reverse();
 
-        const tr = document.createElement("tr");
+  rows.forEach(row => {
+    // Ordre attendu (selon ton doPost):
+    // 0 utilisateur, 1 date, 2 nom, 3 telephone, 4 code_postal, 5 ville, 6 adresse, 7 commentaire, 8 confirme
+    const utilisateur = row[0] || "";
+    const date = row[1] || "";
+    const nom = row[2] || "";
+    const telephone = row[3] || "";
+    const ville = row[5] || "";
+    const confirme = (row[8] || "").toString().toLowerCase() === "oui";
 
-        tr.innerHTML = `
-          <td>${row[1]}</td>
-          <td>${row[2]}</td>
-          <td>${row[3]}</td>
-          <td>${row[5]}</td>
-          <td>${row[0]}</td>
-          <td>${row[8] ? "✅" : "❌"}</td>
-        `;
+    const tr = document.createElement("tr");
+    tr.innerHTML = `
+      <td>${escapeHtml(date)}</td>
+      <td>${escapeHtml(nom)}</td>
+      <td>${escapeHtml(telephone)}</td>
+      <td>${escapeHtml(ville)}</td>
+      <td>${escapeHtml(utilisateur)}</td>
+      <td style="text-align:center;">${confirme ? "✅" : "❌"}</td>
+    `;
+    tbody.appendChild(tr);
+  });
 
-        tbody.appendChild(tr);
-      });
-    });
+  appliquerFiltreRecherche();
 }
 
-document.getElementById("search").addEventListener("input", function() {
-  const value = this.value.toLowerCase();
+function escapeHtml(str) {
+  return (str ?? "").toString()
+    .replaceAll("&","&amp;")
+    .replaceAll("<","&lt;")
+    .replaceAll(">","&gt;")
+    .replaceAll('"',"&quot;")
+    .replaceAll("'","&#039;");
+}
 
-  document.querySelectorAll("#table tbody tr").forEach(row => {
-    row.style.display = row.innerText.toLowerCase().includes(value)
-      ? ""
-      : "none";
+// JSONP loader (pas de CORS)
+function chargerDonnees() {
+  // Supprime l'ancien script JSONP s'il existe
+  const old = document.getElementById("jsonpLoader");
+  if (old) old.remove();
+
+  // Ajoute un script avec callback
+  const s = document.createElement("script");
+  s.id = "jsonpLoader";
+  s.src = `${EXEC_URL}?callback=renderData&_=${Date.now()}`; // cache buster
+  document.body.appendChild(s);
+}
+
+// 🔍 Recherche
+function appliquerFiltreRecherche() {
+  const input = document.getElementById("search");
+  if (!input) return;
+
+  const value = input.value.toLowerCase();
+  document.querySelectorAll("#table tbody tr").forEach(tr => {
+    tr.style.display = tr.innerText.toLowerCase().includes(value) ? "" : "none";
   });
-});
+}
 
-setInterval(chargerDonnees, 3000);
+document.getElementById("search").addEventListener("input", appliquerFiltreRecherche);
+
+// ✅ Auto refresh
 chargerDonnees();
+setInterval(chargerDonnees, 4000);
+
+// ✅ Message + refresh après envoi formulaire
+document.getElementById("callForm").addEventListener("submit", function () {
+  setTimeout(() => {
+    alert("✅ Appel enregistré !");
+    this.reset();
+    // Recharge le tableau après enregistrement
+    setTimeout(chargerDonnees, 1200);
+  }, 600);
+});
 </script>
 
 </body>
