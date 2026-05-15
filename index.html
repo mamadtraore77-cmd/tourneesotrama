@@ -1,266 +1,217 @@
 <!DOCTYPE html>
 <html lang="fr">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1"/>
-  <title>Registre des appels</title>
+<head /><head>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Registre des appels</title>
 
-  <style>
-    :root{
-      --primary:#1b5e20;
-      --bg:#f4f7f6;
-      --border:#e4e7ea;
-      --text:#1f2937;
-    }
-    body{
-      font-family:"Segoe UI", Arial, sans-serif;
-      background:var(--bg);
-      margin:0;
-      padding:30px;
-      color:var(--text);
-    }
-    .container{
-      max-width:1000px;
-      margin:0 auto;
-      background:#fff;
-      padding:26px;
-      border-radius:12px;
-      box-shadow:0 6px 18px rgba(0,0,0,.10);
-    }
-    .header{
-      display:flex;
-      align-items:center;
-      gap:14px;
-      margin-bottom:18px;
-    }
-    .logo{ height:60px; width:auto; }
-    .title{
-      font-size:22px;
-      font-weight:800;
-      color:var(--primary);
-      margin:0;
-    }
-    h2{
-      margin:18px 0 12px;
-      color:var(--primary);
-    }
+<style>
+body{
+  font-family:"Segoe UI", Arial;
+  background:#f4f7f6;
+  margin:0;
+  padding:30px;
+}
+.container{
+  max-width:1000px;
+  margin:auto;
+  background:white;
+  padding:25px;
+  border-radius:12px;
+  box-shadow:0 6px 15px rgba(0,0,0,0.1);
+}
+.header{
+  display:flex;
+  align-items:center;
+  gap:15px;
+  margin-bottom:20px;
+}
+.logo{ height:60px; }
+.title{
+  font-size:22px;
+  font-weight:bold;
+  color:#1b5e20;
+}
+.form-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:15px;
+}
+.full{ grid-column:1 / -1; }
+label{ font-weight:bold; display:block; margin-bottom:6px; }
+input, select, textarea{
+  width:100%;
+  padding:10px;
+  border-radius:8px;
+  border:1px solid #ddd;
+  box-sizing:border-box;
+}
+textarea{ min-height:80px; }
+button{
+  background:#1b5e20;
+  color:white;
+  padding:12px;
+  border:none;
+  border-radius:10px;
+  font-weight:bold;
+  cursor:pointer;
+  width:100%;
+}
+button:hover{ background:#124016; }
 
-    .form-grid{
-      display:grid;
-      grid-template-columns:1fr 1fr;
-      gap:14px;
-    }
-    .full{ grid-column:1 / -1; }
-    label{
-      font-weight:700;
-      font-size:14px;
-      display:block;
-      margin-bottom:6px;
-    }
-    input, select, textarea{
-      width:100%;
-      padding:10px;
-      border:1px solid var(--border);
-      border-radius:8px;
-      font-size:14px;
-      box-sizing:border-box;
-      background:#fff;
-    }
-    textarea{ min-height:90px; resize:vertical; }
+.toolbar{
+  display:flex;
+  gap:10px;
+  align-items:center;
+  margin:10px 0;
+  flex-wrap:wrap;
+}
+.search{ flex:1; min-width:260px; padding:10px; border-radius:8px; border:1px solid #ddd; }
 
-    .confirm-row{
-      display:flex;
-      align-items:center;
-      gap:10px;
-      padding:10px;
-      border:1px solid var(--border);
-      border-radius:8px;
-      background:#fafafa;
-    }
-    .confirm-row input{ width:auto; margin:0; }
+table{
+  width:100%;
+  border-collapse:collapse;
+  margin-top:10px;
+  font-size:14px;
+}
+th{
+  background:#1b5e20;
+  color:white;
+  padding:10px;
+  text-align:left;
+}
+td{
+  border:1px solid #ddd;
+  padding:8px;
+}
+tr:nth-child(even){ background:#fafafa; }
 
-    .btn{
-      background:var(--primary);
-      color:#fff;
-      padding:12px 14px;
-      border:none;
-      border-radius:10px;
-      font-weight:800;
-      cursor:pointer;
-      width:100%;
-      font-size:15px;
-    }
-    .btn:hover{ background:#124016; }
+.badge-oui{
+  display:inline-block;
+  padding:2px 8px;
+  border-radius:999px;
+  font-weight:700;
+  background:#e8f5e9;
+  color:#1b5e20;
+}
+.badge-non{
+  display:inline-block;
+  padding:2px 8px;
+  border-radius:999px;
+  font-weight:700;
+  background:#ffebee;
+  color:#b71c1c;
+}
+.small{ color:#6b7280; font-size:12px; margin-top:6px; }
+</style>
 
-    .toolbar{
-      display:flex;
-      gap:10px;
-      align-items:center;
-      margin:10px 0 8px;
-      flex-wrap:wrap;
-    }
-    .search{
-      flex:1;
-      min-width:240px;
-    }
-    table{
-      width:100%;
-      border-collapse:collapse;
-      margin-top:10px;
-      font-size:14px;
-    }
-    th{
-      background:var(--primary);
-      color:#fff;
-      padding:10px;
-      text-align:left;
-    }
-    td{
-      padding:9px 10px;
-      border:1px solid var(--border);
-      vertical-align:top;
-    }
-    tr:nth-child(even){ background:#fbfbfb; }
-
-    .badge-oui{
-      display:inline-block;
-      padding:2px 8px;
-      border-radius:999px;
-      font-weight:700;
-      background:#e8f5e9;
-      color:#1b5e20;
-    }
-    .badge-non{
-      display:inline-block;
-      padding:2px 8px;
-      border-radius:999px;
-      font-weight:700;
-      background:#ffebee;
-      color:#b71c1c;
-    }
-
-    .hint{
-      font-size:12px;
-      color:#6b7280;
-      margin-top:6px;
-    }
-  </style>
-
-  <!-- ✅ Tu colles ton URL /exec ici UNE SEULE FOIS -->
-  <script>
-    window.EXEC_URL = "https://script.google.com/macros/s/AKfycbyoqQPBFc42_hIe-1RvcvgojYiYGE9ie07P70t8WroyrCBBmaapimXeHbrbanWYMFAYow/exec";
-  </script>
+<script>
+  // ✅ Mets ici TON URL /exec (déjà fournie)
+  window.EXEC_URL = "https://script.google.com/macros/s/AKfycbyoqQPBFc42_hIe-1RvcvgojYiYGE9ie07P70t8WroyrCBBmaapimXeHbrbanWYMFAYow/exec";
+</script>
 
 </head>
-
 <body>
-  <div class="container">
 
-    <div class="header">
-      <img src="logo.png" class="logo" alt="Logo" onerror="this.style.display='none'">
-      <div>
-        <div class="title">Registre des appels clients</div>
-        <div class="hint">Saisie + historique partagé (Google Sheets)</div>
-      </div>
-    </div>
-
-    <h2>Enregistrer un appel</h2>
-
-    <!-- ✅ Écriture fiable : FORM POST vers Apps Script -->
-    <form id="callForm" method="POST" target="hidden_iframe">
-      <div class="form-grid">
-
-        <div>
-          <label for="utilisateur">Utilisateur</label>
-          <select name="utilisateur" id="utilisateur" required>
-            <option value="Mamadou">Mamadou</option>
-            <option value="Daby">Daby</option>
-            <option value="Yacouba">Yacouba</option>
-          </select>
-        </div>
-
-        <div>
-          <label for="date">Date</label>
-          <input type="date" name="date" id="date" required>
-        </div>
-
-        <div>
-          <label for="nom">Nom</label>
-          <input type="text" name="nom" id="nom" placeholder="Ex: Jean Dupont">
-        </div>
-
-        <div>
-          <label for="telephone">Téléphone</label>
-          <input type="text" name="telephone" id="telephone" placeholder="Ex: 06 12 34 56 78">
-        </div>
-
-        <div>
-          <label for="code_postal">Code postal</label>
-          <input type="text" name="code_postal" id="code_postal" placeholder="Ex: 75000">
-        </div>
-
-        <div>
-          <label for="ville">Ville</label>
-          <input type="text" name="ville" id="ville" placeholder="Ex: Paris">
-        </div>
-
-        <div class="full">
-          <label for="adresse">Adresse</label>
-          <input type="text" name="adresse" id="adresse" placeholder="Ex: 10 rue de la Paix">
-        </div>
-
-        <div class="full">
-          <label for="commentaire">Commentaire</label>
-          <textarea name="commentaire" id="commentaire" placeholder="Détails de la demande..."></textarea>
-        </div>
-
-        <div class="full">
-          <!-- ✅ Checkbox envoie "Oui" si cochée, sinon rien -->
-          <div class="confirm-row">
-            <input type="checkbox" name="confirme" id="confirme" value="Oui">
-            <label for="confirme" style="margin:0;">Confirmé</label>
-          </div>
-          <div class="hint">La feuille enregistrera automatiquement “Oui” ou “Non”.</div>
-        </div>
-
-        <div class="full">
-          <button type="submit" class="btn">✅ Enregistrer</button>
-          <div class="hint" id="status"></div>
-        </div>
-
-      </div>
-    </form>
-
-    <!-- iframe cachée pour éviter redirection -->
-    <iframe name="hidden_iframe" style="display:none;"></iframe>
-
-    <h2 style="margin-top:34px;">📊 Historique des appels</h2>
-
-    <div class="toolbar">
-      <input class="search" type="text" id="search" placeholder="🔍 Rechercher (nom, téléphone, ville, utilisateur...)">
-      <div class="hint">Mise à jour auto toutes les 5s</div>
-    </div>
-
-    <table id="table">
-      <thead>
-        <tr>
-          <th>Date</th>
-          <th>Nom</th>
-          <th>Téléphone</th>
-          <th>CP</th>
-          <th>Ville</th>
-          <th>Adresse</th>
-          <th>Utilisateur</th>
-          <th>Confirmé</th>
-          <th>Commentaire</th>
-        </tr>
-      </thead>
-      <tbody></tbody>
-    </table>
-
+<div class="container">
+  <div class="header">
+    <img src="logo.png" class="logo" alt="Logo">
+    <div class="title">Registre des appels clients</div>
   </div>
 
-  <script src="script.js"></script>
+  <h2>Enregistrer un appel</h2>
+
+  <!-- ✅ Envoi fiable : POST via form -->
+  <form id="callForm" method="POST" target="hidden_iframe">
+    <div class="form-grid">
+
+      <div>
+        <label for="utilisateur">Utilisateur</label>
+        <select name="utilisateur" id="utilisateur" required>
+          <option value="Mamadou">Mamadou</option>
+          <option value="Daby">Daby</option>
+          <option value="Yacouba">Yacouba</option>
+        </select>
+      </div>
+
+      <div>
+        <label for="date">Date</label>
+        <input type="date" name="date" id="date" required>
+      </div>
+
+      <div>
+        <label for="nom">Nom</label>
+        <input type="text" name="nom" id="nom">
+      </div>
+
+      <div>
+        <label for="telephone">Téléphone</label>
+        <input type="text" name="telephone" id="telephone">
+      </div>
+
+      <div>
+        <label for="code_postal">Code postal</label>
+        <input type="text" name="code_postal" id="code_postal">
+      </div>
+
+      <div>
+        <label for="ville">Ville</label>
+        <input type="text" name="ville" id="ville">
+      </div>
+
+      <div class="full">
+        <label for="adresse">Adresse</label>
+        <input type="text" name="adresse" id="adresse">
+      </div>
+
+      <div class="full">
+        <label for="commentaire">Commentaire</label>
+        <textarea name="commentaire" id="commentaire"></textarea>
+      </div>
+
+      <div class="full">
+        <label style="display:flex; align-items:center; gap:10px; margin:0;">
+          <input type="checkbox" name="confirme" id="confirme" value="Oui">
+          Confirmé
+        </label>
+        <div class="small">Enregistré automatiquement en “Oui/Non”.</div>
+      </div>
+
+      <div class="full">
+        <button type="submit">✅ Enregistrer</button>
+        <div class="small" id="status"></div>
+      </div>
+
+    </div>
+  </form>
+
+  <iframe name="hidden_iframe" style="display:none;"></iframe>
+
+  <h2 style="margin-top:34px;">📊 Historique des appels</h2>
+
+  <div class="toolbar">
+    <input type="text" id="search" class="search" placeholder="🔍 Rechercher (nom, ville, tel, utilisateur...)">
+    <span class="small">Mise à jour auto ~5s</span>
+  </div>
+
+  <table id="table">
+    <thead>
+      <tr>
+        <th>Date</th>
+        <th>Nom</th>
+        <th>Téléphone</th>
+        <th>CP</th>
+        <th>Ville</th>
+        <th>Adresse</th>
+        <th>Utilisateur</th>
+        <th>Confirmé</th>
+        <th>Commentaire</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+
+</div>
+
+<script src="script.js"></script>
 </body>
 </html>
-
