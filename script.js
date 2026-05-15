@@ -1,30 +1,48 @@
 <script>
 const URL = "https://script.google.com/macros/s/AKfycbyoqQPBFc42_hIe-1RvcvgojYiYGE9ie07P70t8WroyrCBBmaapimXeHbrbanWYMFAYow/exec";
 
-document.getElementById("callForm").addEventListener("submit", function(e) {
-  e.preventDefault();
+function chargerDonnees() {
+  fetch(URL)
+    .then(res => res.json())
+    .then(data => {
 
-  const data = new URLSearchParams();
+      const tbody = document.querySelector("#table tbody");
+      tbody.innerHTML = "";
 
-  data.append("utilisateur", document.getElementById("utilisateur").value);
-  data.append("date", document.getElementById("date").value);
-  data.append("nom", document.getElementById("nom").value);
-  data.append("telephone", document.getElementById("telephone").value);
-  data.append("code_postal", document.getElementById("code_postal").value);
-  data.append("ville", document.getElementById("ville").value);
-  data.append("adresse", document.getElementById("adresse").value);
-  data.append("commentaire", document.getElementById("commentaire").value);
+      // ignorer première ligne (header)
+      data.slice(1).reverse().forEach(row => {
 
-  data.append("confirme",
-    document.getElementById("confirme").checked ? "Oui" : "Non"
-  );
+        const tr = document.createElement("tr");
 
-  fetch(URL, {
-    method: "POST",
-    body: data
+        tr.innerHTML = `
+          <td>${row[1] || ""}</td>
+          <td>${row[2] || ""}</td>
+          <td>${row[3] || ""}</td>
+          <td>${row[5] || ""}</td>
+          <td>${row[0] || ""}</td>
+          <td>${row[8] === "Oui" ? "✅" : "❌"}</td>
+        `;
+
+        tbody.appendChild(tr);
+      });
+    })
+    .catch(err => console.error(err));
+}
+
+// 🔍 recherche
+document.getElementById("search").addEventListener("input", function() {
+  const value = this.value.toLowerCase();
+
+  document.querySelectorAll("#table tbody tr").forEach(row => {
+    row.style.display = row.innerText.toLowerCase().includes(value)
+      ? ""
+      : "none";
   });
-
-  alert("✅ Appel enregistré !");
-  this.reset();
 });
+
+// ✅ refresh auto
+setInterval(chargerDonnees, 4000);
+
+// ✅ premier chargement
+chargerDonnees();
 </script>
