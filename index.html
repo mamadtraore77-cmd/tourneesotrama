@@ -42,3 +42,196 @@ body {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 15px;
+}
+
+.full {
+  grid-column: 1 / -1;
+}
+
+label {
+  font-weight: bold;
+}
+
+input, select, textarea {
+  width: 100%;
+  padding: 8px;
+  margin-top: 5px;
+}
+
+textarea {
+  min-height: 70px;
+}
+
+button {
+  background: #1b5e20;
+  color: white;
+  padding: 10px;
+  border: none;
+  cursor: pointer;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+th {
+  background: #1b5e20;
+  color: white;
+  padding: 10px;
+}
+
+td {
+  padding: 8px;
+  border: 1px solid #ddd;
+}
+</style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+<div class="header">
+  <img src="logo.png" class="logo">
+  <div class="title">Registre des appels clients</div>
+</div>
+
+<h2>Enregistrer un appel</h2>
+
+<!-- ✅ FORMULAIRE -->
+<form action="https://script.google.com/macros/s/AKfycbyoqQPBFc42_hIe-1RvcvgojYiYGE9ie07P70t8WroyrCBBmaapimXeHbrbanWYMFAYow/exec"
+      method="POST"
+      target="hidden_iframe">
+
+<div class="form-grid">
+
+<div>
+<label>Utilisateur</label>
+<select name="utilisateur">
+  <option>Mamadou</option>
+  <option>Daby</option>
+  <option>Yacouba</option>
+</select>
+</div>
+
+<div>
+<label>Date</label>
+<input type="date" name="date" required>
+</div>
+
+<div>
+<label>Nom</label>
+<input type="text" name="nom">
+</div>
+
+<div>
+<label>Téléphone</label>
+<input type="text" name="telephone">
+</div>
+
+<div>
+<label>Code postal</label>
+<input type="text" name="code_postal">
+</div>
+
+<div>
+<label>Ville</label>
+<input type="text" name="ville">
+</div>
+
+<div class="full">
+<label>Adresse</label>
+<input type="text" name="adresse">
+</div>
+
+<div class="full">
+<label>Commentaire</label>
+<textarea name="commentaire"></textarea>
+</div>
+
+<div class="full">
+<label style="display:flex; align-items:center; gap:10px;">
+  <input type="checkbox" name="confirme" value="Oui">
+  Confirmé
+</label>
+</div>
+
+<div class="full">
+<button type="submit">✅ Enregistrer</button>
+</div>
+
+</div>
+
+</form>
+
+<iframe name="hidden_iframe" style="display:none;"></iframe>
+
+<!-- ✅ TABLEAU DYNAMIQUE -->
+<h2 style="margin-top:40px;">📊 Historique des appels</h2>
+
+<input type="text" id="search" placeholder="🔍 Rechercher..." 
+       style="width:100%; padding:10px; margin-bottom:10px;">
+
+<table id="table">
+  <thead>
+    <tr>
+      <th>Date</th>
+      <th>Nom</th>
+      <th>Téléphone</th>
+      <th>Ville</th>
+      <th>Utilisateur</th>
+      <th>Confirmé</th>
+    </tr>
+  </thead>
+  <tbody></tbody>
+</table>
+
+</div>
+
+<script>
+const URL = "https://script.google.com/macros/s/AKfycbyoqQPBFc42_hIe-1RvcvgojYiYGE9ie07P70t8WroyrCBBmaapimXeHbrbanWYMFAYow/exec";
+
+function chargerDonnees() {
+  fetch(URL)
+    .then(res => res.json())
+    .then(data => {
+      const tbody = document.querySelector("#table tbody");
+      tbody.innerHTML = "";
+
+      data.slice(1).reverse().forEach(row => {
+
+        const tr = document.createElement("tr");
+
+        tr.innerHTML = `
+          <td>${row[1]}</td>
+          <td>${row[2]}</td>
+          <td>${row[3]}</td>
+          <td>${row[5]}</td>
+          <td>${row[0]}</td>
+          <td>${row[8] ? "✅" : "❌"}</td>
+        `;
+
+        tbody.appendChild(tr);
+      });
+    });
+}
+
+document.getElementById("search").addEventListener("input", function() {
+  const value = this.value.toLowerCase();
+
+  document.querySelectorAll("#table tbody tr").forEach(row => {
+    row.style.display = row.innerText.toLowerCase().includes(value)
+      ? ""
+      : "none";
+  });
+});
+
+setInterval(chargerDonnees, 3000);
+chargerDonnees();
+</script>
+
+</body>
+</html>
