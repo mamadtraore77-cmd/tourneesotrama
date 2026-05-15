@@ -1,9 +1,8 @@
 <script>
-const GOOGLE_SCRIPT_URL = 
-"https://script.google.com/macros/s/AKfycbyoqQPBFc42_hIe-1RvcvgojYiYGE9ie07P70t8WroyrCBBmaapimXeHbrbanWYMFAYow/exec";
+const URL = "https://script.google.com/macros/s/AKfycbyoqQPBFc42_hIe-1RvcvgojYiYGE9ie07P70t8WroyrCBBmaapimXeHbrbanWYMFAYow/exec";
 
 document.getElementById("callForm").addEventListener("submit", function(e) {
-  e.preventDefault(); // ✅ empêche le rechargement
+  e.preventDefault();
 
   const data = new URLSearchParams();
 
@@ -20,10 +19,9 @@ document.getElementById("callForm").addEventListener("submit", function(e) {
     document.getElementById("confirme").checked ? "Oui" : "Non"
   );
 
-  fetch(GOOGLE_SCRIPT_URL, {
+  fetch(URL, {
     method: "POST",
-    body: data,
-    mode: "no-cors"
+    body: data
   });
 
   alert("✅ Appel enregistré !");
