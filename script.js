@@ -1,48 +1,37 @@
-<script>
-const URL = "https://script.google.com/macros/s/AKfycbyoqQPBFc42_hIe-1RvcvgojYiYGE9ie07P70t8WroyrCBBmaapimXeHbrbanWYMFAYow/exec";
+// ==========================
+// Registre Appels - Front
+// Lecture via JSONP (anti-CORS)
+// Ecriture via <form> POST
+// ==========================
 
-function chargerDonnees() {
-  fetch(URL)
-    .then(res => res.json())
-    .then(data => {
+const EXEC_URL = window.EXEC_URL;
+const REFRESH_MS = 5000;
 
-      const tbody = document.querySelector("#table tbody");
-      tbody.innerHTML = "";
-
-      // ignorer première ligne (header)
-      data.slice(1).reverse().forEach(row => {
-
-        const tr = document.createElement("tr");
-
-        tr.innerHTML = `
-          <td>${row[1] || ""}</td>
-          <td>${row[2] || ""}</td>
-          <td>${row[3] || ""}</td>
-          <td>${row[5] || ""}</td>
-          <td>${row[0] || ""}</td>
-          <td>${row[8] === "Oui" ? "✅" : "❌"}</td>
-        `;
-
-        tbody.appendChild(tr);
-      });
-    })
-    .catch(err => console.error(err));
+// ------- Utilitaires -------
+function escapeHtml(str) {
+  return (str ?? "").toString()
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#039;");
 }
 
-// 🔍 recherche
-document.getElementById("search").addEventListener("input", function() {
-  const value = this.value.toLowerCase();
+// JSONP loader: EXEC_URL?callback=xxx&_=
+function jsonpGet(url) {
+  return new Promise((resolve, reject) => {
+    const cbName = "cb_" + Math.random().toString(36).slice(2);
+    const script = document.createElement("script");
+    script.async = true;
 
-  document.querySelectorAll("#table tbody tr").forEach(row => {
-    row.style.display = row.innerText.toLowerCase().includes(value)
-      ? ""
-      : "none";
-  });
-});
+    window[cbName] = (payload) => {
+      cleanup();
+      resolve(payload);
+    };
 
-// ✅ refresh auto
-setInterval(chargerDonnees, 4000);
+    const cleanup = () => {
+      try { delete window[cbName]; } catch (e) { window[cbName] = undefined; }
+      if (script.parentNode) script.parentNode.removeChild(script);
+    };
 
-// ✅ premier chargement
-chargerDonnees();
-</script>
+    script.onerror = () => {
