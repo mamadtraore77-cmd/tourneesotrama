@@ -1,278 +1,148 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-<meta charset="UTF-8">
-<title>Registre des appels</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Registre des appels</title>
 
-<style>
-body {
-  font-family: "Segoe UI", Arial;
-  background: #f4f7f6;
-  margin: 0;
-  padding: 30px;
-}
+  <style>
+    :root{
+      --primary:#1b5e20;
+      --bg:#f4f7f6;
+      --border:#e4e7ea;
+      --text:#1f2937;
+    }
+    body{
+      font-family:"Segoe UI", Arial, sans-serif;
+      background:var(--bg);
+      margin:0;
+      padding:30px;
+      color:var(--text);
+    }
+    .container{
+      max-width:1000px;
+      margin:0 auto;
+      background:#fff;
+      padding:26px;
+      border-radius:12px;
+      box-shadow:0 6px 18px rgba(0,0,0,.10);
+    }
+    .header{
+      display:flex;
+      align-items:center;
+      gap:14px;
+      margin-bottom:18px;
+    }
+    .logo{ height:60px; width:auto; }
+    .title{
+      font-size:22px;
+      font-weight:800;
+      color:var(--primary);
+      margin:0;
+    }
+    h2{
+      margin:18px 0 12px;
+      color:var(--primary);
+    }
 
-.container {
-  max-width: 900px;
-  margin: auto;
-  background: white;
-  padding: 25px;
-  border-radius: 12px;
-  box-shadow: 0 6px 15px rgba(0,0,0,0.1);
-}
+    .form-grid{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:14px;
+    }
+    .full{ grid-column:1 / -1; }
+    label{
+      font-weight:700;
+      font-size:14px;
+      display:block;
+      margin-bottom:6px;
+    }
+    input, select, textarea{
+      width:100%;
+      padding:10px;
+      border:1px solid var(--border);
+      border-radius:8px;
+      font-size:14px;
+      box-sizing:border-box;
+      background:#fff;
+    }
+    textarea{ min-height:90px; resize:vertical; }
 
-.header {
-  display: flex;
-  align-items: center;
-  gap: 15px;
-  margin-bottom: 20px;
-}
+    .confirm-row{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      padding:10px;
+      border:1px solid var(--border);
+      border-radius:8px;
+      background:#fafafa;
+    }
+    .confirm-row input{ width:auto; margin:0; }
 
-.logo {
-  height: 60px;
-}
+    .btn{
+      background:var(--primary);
+      color:#fff;
+      padding:12px 14px;
+      border:none;
+      border-radius:10px;
+      font-weight:800;
+      cursor:pointer;
+      width:100%;
+      font-size:15px;
+    }
+    .btn:hover{ background:#124016; }
 
-.title {
-  font-size: 22px;
-  font-weight: bold;
-  color: #1b5e20;
-}
+    .toolbar{
+      display:flex;
+      gap:10px;
+      align-items:center;
+      margin:10px 0 8px;
+      flex-wrap:wrap;
+    }
+    .search{
+      flex:1;
+      min-width:240px;
+    }
+    table{
+      width:100%;
+      border-collapse:collapse;
+      margin-top:10px;
+      font-size:14px;
+    }
+    th{
+      background:var(--primary);
+      color:#fff;
+      padding:10px;
+      text-align:left;
+    }
+    td{
+      padding:9px 10px;
+      border:1px solid var(--border);
+      vertical-align:top;
+    }
+    tr:nth-child(even){ background:#fbfbfb; }
 
-.form-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 15px;
-}
+    .badge-oui{
+      display:inline-block;
+      padding:2px 8px;
+      border-radius:999px;
+      font-weight:700;
+      background:#e8f5e9;
+      color:#1b5e20;
+    }
+    .badge-non{
+      display:inline-block;
+      padding:2px 8px;
+      border-radius:999px;
+      font-weight:700;
+      background:#ffebee;
+      color:#b71c1c;
+    }
 
-.full {
-  grid-column: 1 / -1;
-}
+    .hint{
+      font-size:12px;
+      color:#6b7280;
+      margin-top:6px;
+    }
+  </style>
 
-label {
-  font-weight: bold;
-}
-
-input, select, textarea {
-  width: 100%;
-  padding: 8px;
-  margin-top: 5px;
-}
-
-textarea {
-  min-height: 70px;
-}
-
-button {
-  background: #1b5e20;
-  color: white;
-  padding: 10px;
-  border: none;
-  cursor: pointer;
-}
-
-table {
-  width: 100%;
-  border-collapse: collapse;
-  margin-top: 20px;
-}
-
-th {
-  background: #1b5e20;
-  color: white;
-  padding: 10px;
-}
-
-td {
-  padding: 8px;
-  border: 1px solid #ddd;
-}
-</style>
-
-</head>
-
-<body>
-
-<div class="container">
-
-<div class="header">
-  <img src="logo.png" class="logo">
-  <div class="title">Registre des appels clients</div>
-</div>
-
-<h2>Enregistrer un appel</h2>
-
-<!-- ✅ FORMULAIRE -->
-<<form id="callForm" 
-
-<div class="form-grid">
-
-<div>
-<label>Utilisateur</label>
-<select name="utilisateur" id="utilisateur">
-  <option>Mamadou</option>
-  <option>Daby</option>
-  <option>Yacouba</option>
-</select>
-</div>
-
-<div>
-<label>Date</label>
-<input type="date" name="date" id="date" required>
-</div>
-
-<div>
-<label>Nom</label>
-<input type="text" name="nom" id="nom">
-</div>
-
-<div>
-<label>Téléphone</label>
-<input type="text" name="telephone" id="telephone">
-</div>
-
-<div>
-<label>Code postal</label>
-<input type="text" name="code_postal" id="code_postal">
-</div>
-
-<div>
-<label>Ville</label>
-<input type="text" name="ville" id="ville">
-</div>
-
-<div class="full">
-<label>Adresse</label>
-<input type="text" name="adresse" id="adresse">
-</div>
-
-<div class="full">
-<label>Commentaire</label>
-<textarea name="commentaire" id="commentaire"></textarea>
-</div>
-
-<div class="full">
-<label style="display:flex; align-items:center; gap:10px;">
-  <input type="checkbox" name="confirme" id="confirme">
-  Confirmé
-</label>
-</div>
-
-<div class="full">
-<button type="submit">✅ Enregistrer</button>
-</div>
-
-</div>
-
-</form>
-
-<iframe name="hidden_iframe" style="display:none;"></iframe>
-
-<!-- ✅ TABLEAU DYNAMIQUE -->
-<h2 style="margin-top:40px;">📊 Historique des appels</h2>
-
-<input type="text" id="search" placeholder="🔍 Rechercher..." 
-       style="width:100%; padding:10px; margin-bottom:10px;">
-
-<table id="table">
-  <thead>
-    <tr>
-      <th>Date</th>
-      <th>Nom</th>
-      <th>Téléphone</th>
-      <th>Ville</th>
-      <th>Utilisateur</th>
-      <th>Confirmé</th>
-    </tr>
-  </thead>
-  <tbody></tbody>
-</table>
-
-</div>
-
-<script>
-const EXEC_URL = "https://script.google.com/macros/s/AKfycbyoqQPBFc42_hIe-1RvcvgojYiYGE9ie07P70t8WroyrCBBmaapimXeHbrbanWYMFAYow/exec";
-
-function renderData(data) {
-  const tbody = document.querySelector("#table tbody");
-  tbody.innerHTML = "";
-
-  // data[0] = headers
-  const rows = data.slice(1).reverse();
-
-  rows.forEach(row => {
-    // Ordre attendu (selon ton doPost):
-    // 0 utilisateur, 1 date, 2 nom, 3 telephone, 4 code_postal, 5 ville, 6 adresse, 7 commentaire, 8 confirme
-    const utilisateur = row[0] || "";
-    const date = row[1] || "";
-    const nom = row[2] || "";
-    const telephone = row[3] || "";
-    const ville = row[5] || "";
-    const confirme = (row[8] || "").toString().toLowerCase() === "oui";
-
-    const tr = document.createElement("tr");
-    tr.innerHTML = `
-      <td>${escapeHtml(date)}</td>
-      <td>${escapeHtml(nom)}</td>
-      <td>${escapeHtml(telephone)}</td>
-      <td>${escapeHtml(ville)}</td>
-      <td>${escapeHtml(utilisateur)}</td>
-      <td style="text-align:center;">${confirme ? "✅" : "❌"}</td>
-    `;
-    tbody.appendChild(tr);
-  });
-
-  appliquerFiltreRecherche();
-}
-
-function escapeHtml(str) {
-  return (str ?? "").toString()
-    .replaceAll("&","&amp;")
-    .replaceAll("<","&lt;")
-    .replaceAll(">","&gt;")
-    .replaceAll('"',"&quot;")
-    .replaceAll("'","&#039;");
-}
-
-// JSONP loader (pas de CORS)
-function chargerDonnees() {
-  // Supprime l'ancien script JSONP s'il existe
-  const old = document.getElementById("jsonpLoader");
-  if (old) old.remove();
-
-  // Ajoute un script avec callback
-  const s = document.createElement("script");
-  s.id = "jsonpLoader";
-  s.src = `${EXEC_URL}?callback=renderData&_=${Date.now()}`; // cache buster
-  document.body.appendChild(s);
-}
-
-// 🔍 Recherche
-function appliquerFiltreRecherche() {
-  const input = document.getElementById("search");
-  if (!input) return;
-
-  const value = input.value.toLowerCase();
-  document.querySelectorAll("#table tbody tr").forEach(tr => {
-    tr.style.display = tr.innerText.toLowerCase().includes(value) ? "" : "none";
-  });
-}
-
-document.getElementById("search").addEventListener("input", appliquerFiltreRecherche);
-
-// ✅ Auto refresh
-chargerDonnees();
-setInterval(chargerDonnees, 4000);
-
-// ✅ Message + refresh après envoi formulaire
-document.getElementById("callForm").addEventListener("submit", function () {
-  setTimeout(() => {
-    alert("✅ Appel enregistré !");
-    this.reset();
-    // Recharge le tableau après enregistrement
-    setTimeout(chargerDonnees, 1200);
-  }, 600);
-});
-</script>
-
-</body>
-</html>
