@@ -146,3 +146,121 @@
     }
   </style>
 
+  <!-- ✅ Tu colles ton URL /exec ici UNE SEULE FOIS -->
+  <script>
+    window.EXEC_URL = "https://script.google.com/macros/s/AKfycbyoqQPBFc42_hIe-1RvcvgojYiYGE9ie07P70t8WroyrCBBmaapimXeHbrbanWYMFAYow/exec";
+  </script>
+
+</head>
+
+<body>
+  <div class="container">
+
+    <div class="header">
+      <img src="logo.png" class="logo" alt="Logo" onerror="this.style.display='none'">
+      <div>
+        <div class="title">Registre des appels clients</div>
+        <div class="hint">Saisie + historique partagé (Google Sheets)</div>
+      </div>
+    </div>
+
+    <h2>Enregistrer un appel</h2>
+
+    <!-- ✅ Écriture fiable : FORM POST vers Apps Script -->
+    <form id="callForm" method="POST" target="hidden_iframe">
+      <div class="form-grid">
+
+        <div>
+          <label for="utilisateur">Utilisateur</label>
+          <select name="utilisateur" id="utilisateur" required>
+            <option value="Mamadou">Mamadou</option>
+            <option value="Daby">Daby</option>
+            <option value="Yacouba">Yacouba</option>
+          </select>
+        </div>
+
+        <div>
+          <label for="date">Date</label>
+          <input type="date" name="date" id="date" required>
+        </div>
+
+        <div>
+          <label for="nom">Nom</label>
+          <input type="text" name="nom" id="nom" placeholder="Ex: Jean Dupont">
+        </div>
+
+        <div>
+          <label for="telephone">Téléphone</label>
+          <input type="text" name="telephone" id="telephone" placeholder="Ex: 06 12 34 56 78">
+        </div>
+
+        <div>
+          <label for="code_postal">Code postal</label>
+          <input type="text" name="code_postal" id="code_postal" placeholder="Ex: 75000">
+        </div>
+
+        <div>
+          <label for="ville">Ville</label>
+          <input type="text" name="ville" id="ville" placeholder="Ex: Paris">
+        </div>
+
+        <div class="full">
+          <label for="adresse">Adresse</label>
+          <input type="text" name="adresse" id="adresse" placeholder="Ex: 10 rue de la Paix">
+        </div>
+
+        <div class="full">
+          <label for="commentaire">Commentaire</label>
+          <textarea name="commentaire" id="commentaire" placeholder="Détails de la demande..."></textarea>
+        </div>
+
+        <div class="full">
+          <!-- ✅ Checkbox envoie "Oui" si cochée, sinon rien -->
+          <div class="confirm-row">
+            <input type="checkbox" name="confirme" id="confirme" value="Oui">
+            <label for="confirme" style="margin:0;">Confirmé</label>
+          </div>
+          <div class="hint">La feuille enregistrera automatiquement “Oui” ou “Non”.</div>
+        </div>
+
+        <div class="full">
+          <button type="submit" class="btn">✅ Enregistrer</button>
+          <div class="hint" id="status"></div>
+        </div>
+
+      </div>
+    </form>
+
+    <!-- iframe cachée pour éviter redirection -->
+    <iframe name="hidden_iframe" style="display:none;"></iframe>
+
+    <h2 style="margin-top:34px;">📊 Historique des appels</h2>
+
+    <div class="toolbar">
+      <input class="search" type="text" id="search" placeholder="🔍 Rechercher (nom, téléphone, ville, utilisateur...)">
+      <div class="hint">Mise à jour auto toutes les 5s</div>
+    </div>
+
+    <table id="table">
+      <thead>
+        <tr>
+          <th>Date</th>
+          <th>Nom</th>
+          <th>Téléphone</th>
+          <th>CP</th>
+          <th>Ville</th>
+          <th>Adresse</th>
+          <th>Utilisateur</th>
+          <th>Confirmé</th>
+          <th>Commentaire</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
+
