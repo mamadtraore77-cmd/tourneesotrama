@@ -13,10 +13,10 @@ body {
 }
 
 .container {
-  max-width: 850px;
+  max-width: 900px;
   margin: auto;
   background: white;
-  padding: 30px;
+  padding: 25px;
   border-radius: 12px;
   box-shadow: 0 6px 15px rgba(0,0,0,0.1);
 }
@@ -25,15 +25,15 @@ body {
   display: flex;
   align-items: center;
   gap: 15px;
-  margin-bottom: 25px;
+  margin-bottom: 20px;
 }
 
 .logo {
-  height: 65px;
+  height: 60px;
 }
 
 .title {
-  font-size: 24px;
+  font-size: 22px;
   font-weight: bold;
   color: #1b5e20;
 }
@@ -42,122 +42,3 @@ body {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 15px;
-}
-
-.full {
-  grid-column: 1 / -1;
-}
-
-label {
-  font-weight: bold;
-  font-size: 14px;
-}
-
-input, textarea, select {
-  width: 100%;
-  padding: 10px;
-  border-radius: 6px;
-  border: 1px solid #ccc;
-  margin-top: 5px;
-}
-
-textarea {
-  min-height: 80px;
-}
-
-button {
-  background: #1b5e20;
-  color: white;
-  padding: 12px;
-  border: none;
-  border-radius: 6px;
-  font-weight: bold;
-  cursor: pointer;
-}
-
-button:hover {
-  background: #124016;
-}
-</style>
-</head>
-
-<body>
-
-<div class="container">
-
-<div class="header">  
- <img src="logo.png" class="logo">
- <div class="title">Registre des appels clients</div>
-
-</div>
-
-<!-- ✅ FORMULAIRE CORRECT -->
-<form action="https://script.google.com/macros/s/AKfycbyoqQPBFc42_hIe-1RvcvgojYiYGE9ie07P70t8WroyrCBBmaapimXeHbrbanWYMFAYow/exec"
-      method="POST"
-      target="hidden_iframe">
-  
-  <div class="form-grid">
-<label>Utilisateur</label>
-<select name="utilisateur">
-  <option>Mamadou</option>
-  <option>Daby</option>
-  <option>Yacouba</option>
-</select>
-
-<label>Date</label>
-<input type="date" name="date" required>
-
-<label>Nom</label>
-<input type="text" name="nom">
-
-<label>Téléphone</label>
-<input type="text" name="telephone">
-
-<label>Code postal</label>
-<input type="text" name="code_postal">
-
-<label>Adresse</label>
-<input type="text" name="adresse">
-
-<label>Commentaire</label>
-<textarea name="commentaire"></textarea>
-
-<div class="full" style="display:flex; align-items:center; gap:10px; margin-top:10px;">
-  <label style="display:flex; align-items:center; gap:10px;">
-    <input type="checkbox" name="confirme" value="Oui">
-    Confirmé
-  </label>
-</div>
-
-<button type="submit">Enregistrer</button>    
-</div>
-  
-</form>
-
-  <h2 style="margin-bottom:15px;">
-    📊 Historique des appels
-  </h2>
-
-  <iframe
-    src="https://docs.google.com/spreadsheets/d/e/2PACX-1vQ7xSD9eMCnQNSeDFpxWYCy2EFgaWzs47_ZC5b1vJ2dcetXUaVVokT9uw2_VAf1GfShk1OzB0Qy7t_Q/pubhtml"
-    style="width:100%; height:500px; border:none;"
-  ></iframe>
-
-</div>
-
-<iframe name="hidden_iframe" style="display:none;"></iframe>
-
-</div>
-
-<script>
-document.querySelector("form").addEventListener("submit", function () {
-  setTimeout(() => {
-    alert("✅ Appel enregistré !");
-    this.reset();
-  }, 500);
-});
-</script>
-
-</body>
-</html>
-``
