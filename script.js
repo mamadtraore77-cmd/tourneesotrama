@@ -10,7 +10,6 @@ function escapeHtml(str) {
     .replaceAll("'", "&#039;");
 }
 
-// JSONP helper (anti-CORS)
 function jsonp(url) {
   return new Promise((resolve, reject) => {
     const cb = "cb_" + Math.random().toString(36).slice(2);
@@ -55,30 +54,36 @@ function applySearchFilter() {
   });
 }
 
+function updateSyncTime() {
+    const now = new Date();
+    const timeString = now.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+    const syncEl = document.getElementById("lastSync");
+    if(syncEl) syncEl.textContent = `Dernière synchro : ${timeString}`;
+}
+
 async function loadTable() {
-  const tbody = document.querySelector("#table tbody");
+  const tbody = document.getElementById("tableBody");
   try {
     const payload = await jsonp(EXEC_URL);
 
     if (!payload || payload.ok === false) {
-      tbody.innerHTML = `<tr><td colspan="9" style="color:#b91c1c;">
-        Erreur lecture: ${escapeHtml(payload?.error || "inconnue")}
+      tbody.innerHTML = `<tr><td colspan="9" style="color:#b91c1c; text-align:center;">
+        Erreur de connexion avec Google Sheets.
       </td></tr>`;
       return;
     }
 
-    const values = payload.values; // 2D array
+    const values = payload.values; 
     if (!values || values.length < 2) {
-      tbody.innerHTML = `<tr><td colspan="9" style="text-align:center;color:#6b7280;">Aucune donnée.</td></tr>`;
+      tbody.innerHTML = `<tr><td colspan="9" style="text-align:center;color:#6b7280; padding:20px;">Aucun appel enregistré dans le tableau.</td></tr>`;
+      updateSyncTime();
       return;
     }
 
-    // values[0] = headers, values[1..] = rows
     const rows = values.slice(1).reverse();
-
     tbody.innerHTML = "";
+    
     rows.forEach(r => {
-      // Ordre FIXE (doPost)
       const utilisateur = r[0] || "";
       const date = r[1] || "";
       const nom = r[2] || "";
@@ -89,54 +94,70 @@ async function loadTable() {
       const commentaire = r[7] || "";
       const confirme = (r[8] || "Non").toString();
 
+      // Formater la date proprement si elle arrive brute
+      let dateAffichee = date;
+      if(date.includes("T")) {
+          dateAffichee = date.split("T")[0].split("-").reverse().join("/");
+      }
+
       const tr = document.createElement("tr");
       tr.innerHTML = `
-        <td>${escapeHtml(date)}</td>
-        <td>${escapeHtml(nom)}</td>
+        <td>${escapeHtml(dateAffichee)}</td>
+        <td><strong>${escapeHtml(nom)}</strong></td>
         <td>${escapeHtml(telephone)}</td>
         <td>${escapeHtml(cp)}</td>
         <td>${escapeHtml(ville)}</td>
-        <td>${escapeHtml(adresse)}</td>
+        <td style="max-width: 200px; overflow: hidden; text-overflow: ellipsis;">${escapeHtml(adresse)}</td>
         <td>${escapeHtml(utilisateur)}</td>
         <td style="text-align:center;">${confirmeBadge(confirme === "Oui" ? "Oui" : "Non")}</td>
-        <td>${escapeHtml(commentaire)}</td>
+        <td style="max-width: 250px; overflow: hidden; text-overflow: ellipsis;">${escapeHtml(commentaire)}</td>
       `;
       tbody.appendChild(tr);
     });
 
     applySearchFilter();
+    updateSyncTime();
 
   } catch (err) {
     console.error(err);
-    tbody.innerHTML = `<tr><td colspan="9" style="color:#b91c1c;">
-      Impossible de charger l’historique (JSONP). Vérifie doGet + déploiement + SPREADSHEET_ID.
-    </td></tr>`;
+    // On ne vide pas le tableau s'il y a juste une erreur réseau temporaire
   }
 }
 
 document.addEventListener("DOMContentLoaded", () => {
-  // Action du formulaire = exec url
   const form = document.getElementById("callForm");
   form.action = EXEC_URL;
 
-  // Date par défaut
   const dateEl = document.getElementById("date");
   if (dateEl && !dateEl.value) dateEl.value = new Date().toISOString().split("T")[0];
 
-  // Recherche
   document.getElementById("search").addEventListener("input", applySearchFilter);
 
-  // Message + reload tableau après envoi
   const status = document.getElementById("status");
   form.addEventListener("submit", () => {
-    status.textContent = "Enregistrement en cours...";
+    status.style.color = "#1b5e20";
+    status.textContent = "⏳ Enregistrement en cours...";
+    
+    // Réinitialisation légère du formulaire après l'envoi
     setTimeout(() => {
-      status.textContent = "✅ Appel enregistré (vérifie la feuille si besoin).";
-      setTimeout(loadTable, 1200);
-      setTimeout(() => status.textContent = "", 3000);
-    }, 600);
+      status.textContent = "✅ Appel enregistré avec succès !";
+      setTimeout(loadTable, 1500); // Recharge le tableau
+      
+      // On vide les champs (sauf date et utilisateur)
+      document.getElementById("nom").value = "";
+      document.getElementById("telephone").value = "";
+      document.getElementById("code_postal").value = "";
+      document.getElementById("ville").value = "";
+      document.getElementById("adresse").value = "";
+      document.getElementById("commentaire").value = "";
+      document.getElementById("confirme").checked = false;
+
+      setTimeout(() => status.textContent = "", 4000);
+    }, 1000);
   });
 
+  // Premier chargement
   loadTable();
+  // Rafraichissement régulier
   setInterval(loadTable, REFRESH_MS);
 });
