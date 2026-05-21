@@ -70,13 +70,13 @@
   /* Grille Formulaire Responsive */
   .form-grid {
     display: grid;
-    grid-template-columns: 1fr; /* 1 colonne par défaut (mobile) */
+    grid-template-columns: 1fr;
     gap: 15px;
   }
 
   @media (min-width: 600px) {
     .form-grid {
-      grid-template-columns: 1fr 1fr; /* 2 colonnes sur ordi/tablette */
+      grid-template-columns: 1fr 1fr;
     }
   }
 
@@ -196,7 +196,7 @@
     width: 100%;
     border-collapse: collapse;
     font-size: 14px;
-    white-space: nowrap; /* Empêche le texte de se casser sur plusieurs lignes */
+    white-space: nowrap;
   }
 
   th {
@@ -246,7 +246,6 @@
 </style>
 
 <script>
-  // URL de ton Web App Apps Script
   window.EXEC_URL = "https://script.google.com/macros/s/AKfycbyoqQPBFc42_hIe-1RvcvgojYiYGE9ie07P70t8WroyrCBBmaapimXeHbrbanWYMFAYow/exec";
 </script>
 
@@ -280,23 +279,23 @@
         </div>
 
         <div>
-          <label for="nom">Nom du client</label>
-          <input type="text" name="nom" id="nom" placeholder="Ex: Jean Dupont">
+          <label for="nom">Nom du client *</label>
+          <input type="text" name="nom" id="nom" placeholder="Ex: Jean Dupont" required>
         </div>
 
         <div>
-          <label for="telephone">Téléphone</label>
-          <input type="tel" name="telephone" id="telephone" placeholder="Ex: 06 12 34 56 78">
+          <label for="telephone">Téléphone *</label>
+          <input type="tel" name="telephone" id="telephone" placeholder="Ex: 06 12 34 56 78" required>
         </div>
 
         <div>
-          <label for="code_postal">Code postal</label>
-          <input type="text" name="code_postal" id="code_postal" placeholder="Ex: 75000">
+          <label for="code_postal">Code postal *</label>
+          <input type="text" name="code_postal" id="code_postal" placeholder="Ex: 75000" required>
         </div>
 
         <div>
-          <label for="ville">Ville</label>
-          <input type="text" name="ville" id="ville" placeholder="Ex: Paris">
+          <label for="ville">Ville *</label>
+          <input type="text" name="ville" id="ville" placeholder="Ex: Paris" required>
         </div>
 
         <div class="full">
