@@ -67,15 +67,13 @@ async function loadTable() {
     const payload = await jsonp(EXEC_URL);
 
     if (!payload || payload.ok === false) {
-      tbody.innerHTML = `<tr><td colspan="9" style="color:#b91c1c; text-align:center;">
-        Erreur de connexion avec Google Sheets.
-      </td></tr>`;
+      tbody.innerHTML = `<tr><td colspan="10" style="color:#b91c1c; text-align:center;">Erreur de connexion avec Google Sheets.</td></tr>`;
       return;
     }
 
     const values = payload.values; 
     if (!values || values.length < 2) {
-      tbody.innerHTML = `<tr><td colspan="9" style="text-align:center;color:#6b7280; padding:20px;">Aucun appel enregistré dans le tableau.</td></tr>`;
+      tbody.innerHTML = `<tr><td colspan="10" style="text-align:center;color:#6b7280; padding:20px;">Aucun appel enregistré dans le tableau.</td></tr>`;
       updateSyncTime();
       return;
     }
@@ -93,8 +91,8 @@ async function loadTable() {
       const adresse = r[6] || "";
       const commentaire = r[7] || "";
       const confirme = (r[8] || "Non").toString();
+      const camion = r[9] || ""; // Récupère la colonne camion créée par Apps Script
 
-      // Formater la date proprement si elle arrive brute
       let dateAffichee = date;
       if(date.includes("T")) {
           dateAffichee = date.split("T")[0].split("-").reverse().join("/");
@@ -103,14 +101,15 @@ async function loadTable() {
       const tr = document.createElement("tr");
       tr.innerHTML = `
         <td>${escapeHtml(dateAffichee)}</td>
+        <td><span style="font-weight:600; color:#1b5e20;">${escapeHtml(camion)}</span></td>
         <td><strong>${escapeHtml(nom)}</strong></td>
         <td>${escapeHtml(telephone)}</td>
         <td>${escapeHtml(cp)}</td>
         <td>${escapeHtml(ville)}</td>
-        <td style="max-width: 200px; overflow: hidden; text-overflow: ellipsis;">${escapeHtml(adresse)}</td>
+        <td style="max-width: 180px; overflow: hidden; text-overflow: ellipsis;">${escapeHtml(adresse)}</td>
         <td>${escapeHtml(utilisateur)}</td>
         <td style="text-align:center;">${confirmeBadge(confirme === "Oui" ? "Oui" : "Non")}</td>
-        <td style="max-width: 250px; overflow: hidden; text-overflow: ellipsis;">${escapeHtml(commentaire)}</td>
+        <td style="max-width: 220px; overflow: hidden; text-overflow: ellipsis;">${escapeHtml(commentaire)}</td>
       `;
       tbody.appendChild(tr);
     });
@@ -120,7 +119,6 @@ async function loadTable() {
 
   } catch (err) {
     console.error(err);
-    // On ne vide pas le tableau s'il y a juste une erreur réseau temporaire
   }
 }
 
@@ -138,12 +136,12 @@ document.addEventListener("DOMContentLoaded", () => {
     status.style.color = "#1b5e20";
     status.textContent = "⏳ Enregistrement en cours...";
     
-    // Réinitialisation légère du formulaire après l'envoi
     setTimeout(() => {
       status.textContent = "✅ Appel enregistré avec succès !";
-      setTimeout(loadTable, 1500); // Recharge le tableau
+      setTimeout(loadTable, 1500); 
       
-      // On vide les champs (sauf date et utilisateur)
+      // On vide tout sauf date et utilisateur
+      document.getElementById("camion").value = "";
       document.getElementById("nom").value = "";
       document.getElementById("telephone").value = "";
       document.getElementById("code_postal").value = "";
@@ -156,8 +154,6 @@ document.addEventListener("DOMContentLoaded", () => {
     }, 1000);
   });
 
-  // Premier chargement
   loadTable();
-  // Rafraichissement régulier
   setInterval(loadTable, REFRESH_MS);
 });
