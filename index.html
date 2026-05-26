@@ -290,7 +290,7 @@
 
         <div>
           <label for="code_postal">Code postal *</label>
-          <input type="text" name="code_postal" id="code_postal" placeholder="Ex: 75000" required>
+          <input type="text" name="code_postal" id="code_postal" placeholder="Ex: 75000" required pattern="[0-9]{5}" maxlength="5" title="Le code postal doit contenir exactement 5 chiffres">
         </div>
 
         <div>
