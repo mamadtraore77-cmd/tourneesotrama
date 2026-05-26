@@ -30,7 +30,6 @@
     margin: 0 auto;
   }
 
-  /* Structure en cartes */
   .card {
     background: var(--card-bg);
     padding: 25px;
@@ -67,7 +66,6 @@
     margin-bottom: 20px;
   }
 
-  /* Grille Formulaire Responsive */
   .form-grid {
     display: grid;
     grid-template-columns: 1fr;
@@ -82,7 +80,6 @@
 
   .full { grid-column: 1 / -1; }
 
-  /* Champs de saisie */
   label {
     font-weight: 600;
     font-size: 14px;
@@ -112,7 +109,6 @@
 
   textarea { min-height: 90px; resize: vertical; }
 
-  /* Checkbox personnalisée */
   .checkbox-wrapper {
     display: flex;
     align-items: center;
@@ -138,7 +134,6 @@
     color: var(--text-main);
   }
 
-  /* Bouton */
   button {
     background: var(--primary);
     color: white;
@@ -158,7 +153,6 @@
   
   button:hover { background: var(--primary-hover); }
 
-  /* Barre d'outils (recherche) */
   .toolbar {
     display: flex;
     flex-direction: column;
@@ -184,7 +178,6 @@
     padding-left: 40px !important;
   }
 
-  /* Tableau Responsive */
   .table-responsive {
     width: 100%;
     overflow-x: auto;
@@ -218,7 +211,6 @@
   tbody tr:nth-child(even) { background: #fafafa; }
   tbody tr:hover { background: #f1f8f1; }
 
-  /* Badges */
   .badge-oui {
     display: inline-flex;
     padding: 4px 10px;
@@ -278,6 +270,19 @@
           <input type="date" name="date" id="date" required>
         </div>
 
+        <div class="full">
+          <label for="camion">Affectation Camion *</label>
+          <select name="camion" id="camion" required>
+            <option value="" disabled selected>-- Sélectionner un camion pour la tournée --</option>
+            <option value="Sékou 20m3 1">Sékou 20m3 1</option>
+            <option value="Sékou 20m3 2">Sékou 20m3 2</option>
+            <option value="Location 1">Location 1</option>
+            <option value="location 2">Location 2</option>
+            <option value="Peugeot boxer">Peugeot boxer</option>
+            <option value="Mercedes sprinter">Mercedes sprinter</option>
+          </select>
+        </div>
+
         <div>
           <label for="nom">Nom du client *</label>
           <input type="text" name="nom" id="nom" placeholder="Ex: Jean Dupont" required>
@@ -289,8 +294,8 @@
         </div>
 
         <div>
-          <label for="code_postal">Code postal *</label>
-          <input type="text" name="code_postal" id="code_postal" placeholder="Ex: 75000" required pattern="[0-9]{5}" maxlength="5" title="Le code postal doit contenir exactement 5 chiffres">
+          <label for="code_postal">Code postal * (5 chiffres)</label>
+          <input type="text" name="code_postal" id="code_postal" placeholder="Ex: 75000" required pattern="[0-9]{5}" maxlength="5" title="Le code postal doit contenir exactement 5 chiffres numériques">
         </div>
 
         <div>
@@ -333,7 +338,7 @@
     <h2>📊 Historique récent</h2>
 
     <div class="toolbar">
-      <input type="text" id="search" class="search" placeholder="Rechercher un nom, téléphone, ville...">
+      <input type="text" id="search" class="search" placeholder="Rechercher un camion, nom, ville...">
       <span class="small" id="lastSync">Mise à jour automatique...</span>
     </div>
 
@@ -342,7 +347,7 @@
         <thead>
           <tr>
             <th>Date</th>
-            <th>Nom</th>
+            <th>Camion</th> <th>Nom</th>
             <th>Téléphone</th>
             <th>CP</th>
             <th>Ville</th>
@@ -353,7 +358,7 @@
           </tr>
         </thead>
         <tbody id="tableBody">
-          <tr><td colspan="9" style="text-align:center; padding: 20px;">Chargement des données...</td></tr>
+          <tr><td colspan="10" style="text-align:center; padding: 20px;">Chargement des données...</td></tr>
         </tbody>
       </table>
     </div>
