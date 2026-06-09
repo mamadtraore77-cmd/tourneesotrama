@@ -1,6 +1,9 @@
 const EXEC_URL = window.EXEC_URL;
 const REFRESH_MS = 5000;
 
+// On crée une liste cachée pour mémoriser les numéros de téléphone déjà enregistrés
+let registeredPhones = []; 
+
 function escapeHtml(str) {
   return (str ?? "").toString()
     .replaceAll("&", "&amp;")
@@ -75,11 +78,13 @@ async function loadTable() {
     if (!values || values.length < 2) {
       tbody.innerHTML = `<tr><td colspan="10" style="text-align:center;color:#6b7280; padding:20px;">Aucun appel enregistré dans le tableau.</td></tr>`;
       updateSyncTime();
+      registeredPhones = []; // On vide la liste si le tableau est vide
       return;
     }
 
     const rows = values.slice(1).reverse();
     tbody.innerHTML = "";
+    registeredPhones = []; // On vide la liste avant de la re-remplir avec les nouvelles données
     
     rows.forEach(r => {
       const utilisateur = r[0] || "";
@@ -91,7 +96,12 @@ async function loadTable() {
       const adresse = r[6] || "";
       const commentaire = r[7] || "";
       const confirme = (r[8] || "Non").toString();
-      const camion = r[9] || ""; // Récupère la colonne camion créée par Apps Script
+      const camion = r[9] || ""; 
+
+      // On mémorise le numéro de téléphone en supprimant les espaces
+      if (telephone) {
+        registeredPhones.push(telephone.toString().replace(/\s+/g, ""));
+      }
 
       let dateAffichee = date;
       if(date.includes("T")) {
@@ -123,10 +133,32 @@ async function loadTable() {
 }
 
 document.addEventListener("DOMContentLoaded", () => {
-  const status = document.getElementById("status");
-  const submitBtn = form.querySelector('button[type="submit"]'); // On cible le bouton
+  const form = document.getElementById("callForm");
+  form.action = EXEC_URL;
 
-  form.addEventListener("submit", () => {
+  const dateEl = document.getElementById("date");
+  if (dateEl && !dateEl.value) dateEl.value = new Date().toISOString().split("T")[0];
+
+  document.getElementById("search").addEventListener("input", applySearchFilter);
+
+  const status = document.getElementById("status");
+  const submitBtn = form.querySelector('button[type="submit"]');
+
+  form.addEventListener("submit", (e) => {
+    
+    // --- NOUVEAU : VERIFICATION DU DOUBLON ---
+    // On récupère le numéro tapé en supprimant les espaces pour la vérification
+    const phoneInput = document.getElementById("telephone").value.replace(/\s+/g, "");
+    const originalPhone = document.getElementById("telephone").value;
+    
+    // Si la liste des numéros connus contient déjà ce numéro :
+    if (registeredPhones.includes(phoneInput)) {
+      e.preventDefault(); // On bloque totalement l'envoi
+      alert(`⚠️ IMPOSSIBLE : Le numéro ${originalPhone} est déjà enregistré dans la base de données !`); // POP-UP D'ALERTE
+      return; // On arrête l'exécution du code
+    }
+    // -----------------------------------------
+
     // 1. On désactive le bouton immédiatement pour empêcher le double-clic
     submitBtn.disabled = true;
     submitBtn.style.opacity = "0.6"; 
