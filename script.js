@@ -1,7 +1,6 @@
 const EXEC_URL = window.EXEC_URL;
 const REFRESH_MS = 5000;
 
-// On crée une liste cachée pour mémoriser les numéros de téléphone déjà enregistrés
 let registeredPhones = []; 
 
 function escapeHtml(str) {
@@ -50,6 +49,12 @@ function confirmeBadge(ouiNon) {
     : `<span class="badge-non">Non</span>`;
 }
 
+// Fonction pour les Filtres Rapides
+function setQuickFilter(term) {
+  document.getElementById("search").value = term;
+  applySearchFilter();
+}
+
 function applySearchFilter() {
   const q = (document.getElementById("search").value || "").toLowerCase();
   document.querySelectorAll("#table tbody tr").forEach(tr => {
@@ -62,6 +67,14 @@ function updateSyncTime() {
     const timeString = now.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
     const syncEl = document.getElementById("lastSync");
     if(syncEl) syncEl.textContent = `Dernière synchro : ${timeString}`;
+}
+
+function formatPhone(phone) {
+    let num = (phone || "").toString().replace(/\D/g, "");
+    if (num.startsWith("0")) {
+        num = num.substring(1);
+    }
+    return num;
 }
 
 async function loadTable() {
@@ -78,13 +91,18 @@ async function loadTable() {
     if (!values || values.length < 2) {
       tbody.innerHTML = `<tr><td colspan="10" style="text-align:center;color:#6b7280; padding:20px;">Aucun appel enregistré dans le tableau.</td></tr>`;
       updateSyncTime();
-      registeredPhones = []; // On vide la liste si le tableau est vide
+      registeredPhones = [];
       return;
     }
 
     const rows = values.slice(1).reverse();
     tbody.innerHTML = "";
-    registeredPhones = []; // On vide la liste avant de la re-remplir avec les nouvelles données
+    registeredPhones = []; 
+
+    // Variables pour les statistiques du tableau de bord
+    let countTotal = 0;
+    let countConfirmes = 0;
+    let countAttente = 0;
     
     rows.forEach(r => {
       const utilisateur = r[0] || "";
@@ -98,9 +116,13 @@ async function loadTable() {
       const confirme = (r[8] || "Non").toString();
       const camion = r[9] || ""; 
 
-      // On mémorise le numéro de téléphone en supprimant les espaces
+      // Calcul des statistiques
+      countTotal++;
+      if (confirme === "Oui") countConfirmes++;
+      else countAttente++;
+
       if (telephone) {
-        registeredPhones.push(telephone.toString().replace(/\s+/g, ""));
+        registeredPhones.push(formatPhone(telephone));
       }
 
       let dateAffichee = date;
@@ -124,6 +146,11 @@ async function loadTable() {
       tbody.appendChild(tr);
     });
 
+    // Mise à jour de l'affichage du Tableau de Bord
+    document.getElementById("stat-total").textContent = countTotal;
+    document.getElementById("stat-confirmes").textContent = countConfirmes;
+    document.getElementById("stat-attente").textContent = countAttente;
+
     applySearchFilter();
     updateSyncTime();
 
@@ -141,25 +168,55 @@ document.addEventListener("DOMContentLoaded", () => {
 
   document.getElementById("search").addEventListener("input", applySearchFilter);
 
+  // --- AMELIORATION 1 : FORMATAGE AUTOMATIQUE DU TELEPHONE ---
+  const phoneInput = document.getElementById("telephone");
+  phoneInput.addEventListener("input", function (e) {
+    // Ne garde que les chiffres
+    let val = this.value.replace(/\D/g, ""); 
+    // Ajoute un espace tous les 2 chiffres
+    let formatted = val.match(/.{1,2}/g)?.join(" ") || "";
+    // Limite à 10 chiffres (donc 14 caractères avec les espaces)
+    this.value = formatted.substring(0, 14); 
+  });
+
+  // --- AMELIORATION 2 : AUTO-COMPLETION DE LA VILLE ---
+  const cpInput = document.getElementById("code_postal");
+  const villeInput = document.getElementById("ville");
+  cpInput.addEventListener("input", async function () {
+    const cp = this.value;
+    if (cp.length === 5) { // Dès qu'il y a 5 chiffres, on interroge la base de données de l'Etat
+      try {
+        const res = await fetch(`https://geo.api.gouv.fr/communes?codePostal=${cp}&fields=nom&format=json`);
+        const data = await res.json();
+        if (data && data.length > 0) {
+          villeInput.value = data[0].nom; // On remplit la ville automatiquement
+          villeInput.style.borderColor = "#28a745"; // Effet visuel vert
+          villeInput.style.backgroundColor = "#e8f5e9";
+          setTimeout(() => {
+            villeInput.style.borderColor = "var(--border-color)";
+            villeInput.style.backgroundColor = "#fff";
+          }, 1500);
+        }
+      } catch(e) { console.error("Erreur API Code Postal", e); }
+    }
+  });
+
   const status = document.getElementById("status");
   const submitBtn = form.querySelector('button[type="submit"]');
 
   form.addEventListener("submit", (e) => {
     
-    // --- NOUVEAU : VERIFICATION DU DOUBLON ---
-    // On récupère le numéro tapé en supprimant les espaces pour la vérification
-    const phoneInput = document.getElementById("telephone").value.replace(/\s+/g, "");
+    // VERIFICATION DU DOUBLON
     const originalPhone = document.getElementById("telephone").value;
+    const phoneInputClean = formatPhone(originalPhone);
     
-    // Si la liste des numéros connus contient déjà ce numéro :
-    if (registeredPhones.includes(phoneInput)) {
-      e.preventDefault(); // On bloque totalement l'envoi
-      alert(`⚠️ IMPOSSIBLE : Le numéro ${originalPhone} est déjà enregistré dans la base de données !`); // POP-UP D'ALERTE
-      return; // On arrête l'exécution du code
+    if (registeredPhones.includes(phoneInputClean)) {
+      e.preventDefault(); 
+      alert(`⚠️ IMPOSSIBLE : Le numéro ${originalPhone} est déjà enregistré dans le tableau !`); 
+      return; 
     }
-    // -----------------------------------------
 
-    // 1. On désactive le bouton immédiatement pour empêcher le double-clic
+    // Désactivation du bouton
     submitBtn.disabled = true;
     submitBtn.style.opacity = "0.6"; 
     submitBtn.style.cursor = "not-allowed";
@@ -181,7 +238,7 @@ document.addEventListener("DOMContentLoaded", () => {
       document.getElementById("commentaire").value = "";
       document.getElementById("confirme").checked = false;
 
-      // 2. On réactive le bouton pour une prochaine saisie
+      // Réactivation du bouton
       submitBtn.disabled = false;
       submitBtn.style.opacity = "1";
       submitBtn.style.cursor = "pointer";
