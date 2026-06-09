@@ -134,7 +134,8 @@
     color: var(--text-main);
   }
 
-  button {
+  /* BOUTON ENREGISTRER */
+  .btn-submit {
     background: var(--primary);
     color: white;
     padding: 14px;
@@ -151,8 +152,59 @@
     gap: 8px;
   }
   
-  button:hover { background: var(--primary-hover); }
+  .btn-submit:hover { background: var(--primary-hover); }
 
+  /* --- NOUVEAU : TABLEAU DE BORD (STATS) --- */
+  .dashboard {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 15px;
+    margin-bottom: 20px;
+  }
+
+  .stat-card {
+    background: #f8f9fa;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 15px;
+    text-align: center;
+  }
+
+  .stat-value {
+    font-size: 24px;
+    font-weight: bold;
+    color: var(--primary);
+  }
+
+  .stat-label {
+    font-size: 13px;
+    color: var(--text-muted);
+    margin-top: 5px;
+  }
+
+  /* --- NOUVEAU : FILTRES RAPIDES --- */
+  .quick-filters {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-bottom: 15px;
+  }
+
+  .filter-btn {
+    background: #e5e7eb;
+    color: #374151;
+    padding: 8px 14px;
+    border-radius: 20px;
+    font-size: 13px;
+    border: none;
+    cursor: pointer;
+    font-weight: 600;
+  }
+
+  .filter-btn:hover { background: #d1d5db; }
+  .filter-btn.active { background: var(--primary); color: white; }
+
+  /* BARRE DE RECHERCHE */
   .toolbar {
     display: flex;
     flex-direction: column;
@@ -254,7 +306,7 @@
 
     <h2>Nouvel enregistrement</h2>
 
-    <form id="callForm" method="POST" target="hidden_iframe">
+    <form id="callForm" method=\"POST\" target=\"hidden_iframe\">
       <div class="form-grid">
         <div>
           <label for="utilisateur">Utilisateur *</label>
@@ -270,7 +322,6 @@
           <input type="date" name="date" id="date" required>
         </div>
 
-        <!-- CHAMP : SELECTION DU CAMION (FACULTATIF) -->
         <div class="full">
           <label for="camion">Affectation Camion</label>
           <select name="camion" id="camion">
@@ -295,8 +346,8 @@
         </div>
 
         <div>
-          <label for="code_postal">Code postal * (5 chiffres)</label>
-          <input type="text" name="code_postal" id="code_postal" placeholder="Ex: 75000" required pattern="[0-9]{5}" maxlength="5" title="Le code postal doit contenir exactement 5 chiffres numériques">
+          <label for="code_postal">Code postal *</label>
+          <input type="text" name="code_postal" id="code_postal" placeholder="Ex: 75000" required pattern="[0-9]{5}" maxlength="5" title="Le code postal doit contenir 5 chiffres">
         </div>
 
         <div>
@@ -322,7 +373,7 @@
         </div>
 
         <div class="full" style="margin-top: 10px;">
-          <button type="submit">
+          <button type="submit" class="btn-submit">
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
             </svg>
@@ -336,10 +387,32 @@
   </div>
 
   <div class="card">
-    <h2>📊 Historique récent</h2>
+    <h2>📊 Suivi Logistique</h2>
+
+    <div class="dashboard">
+      <div class="stat-card">
+        <div class="stat-value" id="stat-total">0</div>
+        <div class="stat-label">Total des Appels</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value" id="stat-confirmes" style="color: #28a745;">0</div>
+        <div class="stat-label">Confirmés ✅</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value" id="stat-attente" style="color: #dc3545;">0</div>
+        <div class="stat-label">En attente ⏳</div>
+      </div>
+    </div>
+
+    <div class="quick-filters">
+      <button type="button" class="filter-btn" onclick="setQuickFilter('')">Tous les appels</button>
+      <button type="button" class="filter-btn" onclick="setQuickFilter('Non')">🚨 Non confirmés</button>
+      <button type="button" class="filter-btn" onclick="setQuickFilter('Sékou')">🚚 Camions Sékou</button>
+      <button type="button" class="filter-btn" onclick="setQuickFilter('Location')">🚚 Camions Location</button>
+    </div>
 
     <div class="toolbar">
-      <input type="text" id="search" class="search" placeholder="Rechercher un camion, nom, ville...">
+      <input type="text" id="search" class="search" placeholder="Recherche manuelle (nom, ville, tél...)">
       <span class="small" id="lastSync">Mise à jour automatique...</span>
     </div>
 
@@ -348,7 +421,8 @@
         <thead>
           <tr>
             <th>Date</th>
-            <th>Camion</th> <th>Nom</th>
+            <th>Camion</th>
+            <th>Nom</th>
             <th>Téléphone</th>
             <th>CP</th>
             <th>Ville</th>
