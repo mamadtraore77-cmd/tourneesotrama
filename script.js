@@ -123,16 +123,15 @@ async function loadTable() {
 }
 
 document.addEventListener("DOMContentLoaded", () => {
-  const form = document.getElementById("callForm");
-  form.action = EXEC_URL;
-
-  const dateEl = document.getElementById("date");
-  if (dateEl && !dateEl.value) dateEl.value = new Date().toISOString().split("T")[0];
-
-  document.getElementById("search").addEventListener("input", applySearchFilter);
-
   const status = document.getElementById("status");
+  const submitBtn = form.querySelector('button[type="submit"]'); // On cible le bouton
+
   form.addEventListener("submit", () => {
+    // 1. On désactive le bouton immédiatement pour empêcher le double-clic
+    submitBtn.disabled = true;
+    submitBtn.style.opacity = "0.6"; 
+    submitBtn.style.cursor = "not-allowed";
+
     status.style.color = "#1b5e20";
     status.textContent = "⏳ Enregistrement en cours...";
     
@@ -140,7 +139,7 @@ document.addEventListener("DOMContentLoaded", () => {
       status.textContent = "✅ Appel enregistré avec succès !";
       setTimeout(loadTable, 1500); 
       
-      // On vide tout sauf date et utilisateur
+      // On vide les champs
       document.getElementById("camion").value = "";
       document.getElementById("nom").value = "";
       document.getElementById("telephone").value = "";
@@ -150,6 +149,11 @@ document.addEventListener("DOMContentLoaded", () => {
       document.getElementById("commentaire").value = "";
       document.getElementById("confirme").checked = false;
 
+      // 2. On réactive le bouton pour une prochaine saisie
+      submitBtn.disabled = false;
+      submitBtn.style.opacity = "1";
+      submitBtn.style.cursor = "pointer";
+      
       setTimeout(() => status.textContent = "", 4000);
     }, 1000);
   });
