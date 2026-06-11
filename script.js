@@ -206,6 +206,34 @@ document.addEventListener("DOMContentLoaded", () => {
 
   form.addEventListener("submit", (e) => {
     
+// --- AMELIORATION 3 : AUTO-COMPLETION DU CODE POSTAL VIA LA VILLE ---
+  villeInput.addEventListener("change", async function () {
+    const ville = this.value.trim();
+    if (ville.length >= 2) { // On lance la recherche si on a tapé au moins 2 lettres
+      try {
+        // On interroge l'API par le nom de la ville
+        const res = await fetch(`https://geo.api.gouv.fr/communes?nom=${ville}&fields=codesPostaux&boost=population&limit=1`);
+        const data = await res.json();
+        
+        // Si on a un résultat avec des codes postaux
+        if (data && data.length > 0 && data[0].codesPostaux) {
+          // On remplit le champ avec le premier code postal trouvé
+          cpInput.value = data[0].codesPostaux[0]; 
+          
+          // Effet visuel vert pour confirmer l'action
+          cpInput.style.borderColor = "#28a745"; 
+          cpInput.style.backgroundColor = "#e8f5e9";
+          setTimeout(() => {
+            cpInput.style.borderColor = "var(--border-color)";
+            cpInput.style.backgroundColor = "#fff";
+          }, 1500);
+        }
+      } catch(e) { 
+        console.error("Erreur API Ville", e); 
+      }
+    }
+  });
+    
     // VERIFICATION DU DOUBLON
     const originalPhone = document.getElementById("telephone").value;
     const phoneInputClean = formatPhone(originalPhone);
