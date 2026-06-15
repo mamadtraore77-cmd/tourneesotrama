@@ -49,7 +49,6 @@ function confirmeBadge(ouiNon) {
     : `<span class="badge-non">Non</span>`;
 }
 
-// Fonction pour les Filtres Rapides
 function setQuickFilter(term) {
   document.getElementById("search").value = term;
   applySearchFilter();
@@ -99,7 +98,6 @@ async function loadTable() {
     tbody.innerHTML = "";
     registeredPhones = []; 
 
-    // Variables pour les statistiques du tableau de bord
     let countTotal = 0;
     let countConfirmes = 0;
     let countAttente = 0;
@@ -116,7 +114,6 @@ async function loadTable() {
       const confirme = (r[8] || "Non").toString();
       const camion = r[9] || ""; 
 
-      // Calcul des statistiques
       countTotal++;
       if (confirme === "Oui") countConfirmes++;
       else countAttente++;
@@ -146,7 +143,6 @@ async function loadTable() {
       tbody.appendChild(tr);
     });
 
-    // Mise à jour de l'affichage du Tableau de Bord
     document.getElementById("stat-total").textContent = countTotal;
     document.getElementById("stat-confirmes").textContent = countConfirmes;
     document.getElementById("stat-attente").textContent = countAttente;
@@ -168,29 +164,30 @@ document.addEventListener("DOMContentLoaded", () => {
 
   document.getElementById("search").addEventListener("input", applySearchFilter);
 
-  // --- AMELIORATION 1 : FORMATAGE AUTOMATIQUE DU TELEPHONE ---
+  // --- FORMATAGE AUTOMATIQUE DU TELEPHONE ---
   const phoneInput = document.getElementById("telephone");
   phoneInput.addEventListener("input", function (e) {
-    // Ne garde que les chiffres
     let val = this.value.replace(/\D/g, ""); 
-    // Ajoute un espace tous les 2 chiffres
     let formatted = val.match(/.{1,2}/g)?.join(" ") || "";
-    // Limite à 10 chiffres (donc 14 caractères avec les espaces)
     this.value = formatted.substring(0, 14); 
   });
 
-  // --- AMELIORATION 2 : AUTO-COMPLETION DE LA VILLE ---
+  // ========================================================
+  // AUTO-COMPLETION : CODE POSTAL <-> VILLE
+  // ========================================================
   const cpInput = document.getElementById("code_postal");
   const villeInput = document.getElementById("ville");
+
+  // 1. Saisie du Code Postal => Remplissage de la Ville
   cpInput.addEventListener("input", async function () {
     const cp = this.value;
-    if (cp.length === 5) { // Dès qu'il y a 5 chiffres, on interroge la base de données de l'Etat
+    if (cp.length === 5) { 
       try {
         const res = await fetch(`https://geo.api.gouv.fr/communes?codePostal=${cp}&fields=nom&format=json`);
         const data = await res.json();
         if (data && data.length > 0) {
-          villeInput.value = data[0].nom; // On remplit la ville automatiquement
-          villeInput.style.borderColor = "#28a745"; // Effet visuel vert
+          villeInput.value = data[0].nom; 
+          villeInput.style.borderColor = "#28a745"; 
           villeInput.style.backgroundColor = "#e8f5e9";
           setTimeout(() => {
             villeInput.style.borderColor = "var(--border-color)";
@@ -201,20 +198,13 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
-  const status = document.getElementById("status");
-  const submitBtn = form.querySelector('button[type="submit"]');
-
-  form.addEventListener("submit", (e) => {
-    
-// --- AMELIORATION 3 : AUTO-COMPLETION DU CODE POSTAL VIA LA VILLE ---
-  let timeoutVille; // Variable pour gérer la pause
-  
+  // 2. Saisie de la Ville => Remplissage du Code Postal
+  let timeoutVille; 
   villeInput.addEventListener("input", function () {
-    clearTimeout(timeoutVille); // On annule la recherche précédente si tu continues de taper
+    clearTimeout(timeoutVille); 
     const ville = this.value.trim();
     
-    if (ville.length >= 3) { // On attend que tu aies tapé au moins 3 lettres
-      // On lance un compte à rebours de 0.8 seconde après ta dernière frappe
+    if (ville.length >= 3) { 
       timeoutVille = setTimeout(async () => {
         try {
           const res = await fetch(`https://geo.api.gouv.fr/communes?nom=${ville}&fields=codesPostaux&boost=population&limit=1`);
@@ -223,7 +213,6 @@ document.addEventListener("DOMContentLoaded", () => {
           if (data && data.length > 0 && data[0].codesPostaux) {
             cpInput.value = data[0].codesPostaux[0]; 
             
-            // Effet visuel vert
             cpInput.style.borderColor = "#28a745"; 
             cpInput.style.backgroundColor = "#e8f5e9";
             setTimeout(() => {
@@ -234,11 +223,16 @@ document.addEventListener("DOMContentLoaded", () => {
         } catch(e) { 
           console.error("Erreur API Ville", e); 
         }
-      }, 800); // 800 millisecondes de délai
+      }, 800); 
     }
   });
+  // ========================================================
+
+  const status = document.getElementById("status");
+  const submitBtn = form.querySelector('button[type="submit"]');
+
+  form.addEventListener("submit", (e) => {
     
-    // VERIFICATION DU DOUBLON
     const originalPhone = document.getElementById("telephone").value;
     const phoneInputClean = formatPhone(originalPhone);
     
@@ -248,7 +242,6 @@ document.addEventListener("DOMContentLoaded", () => {
       return; 
     }
 
-    // Désactivation du bouton
     submitBtn.disabled = true;
     submitBtn.style.opacity = "0.6"; 
     submitBtn.style.cursor = "not-allowed";
@@ -260,7 +253,6 @@ document.addEventListener("DOMContentLoaded", () => {
       status.textContent = "✅ Appel enregistré avec succès !";
       setTimeout(loadTable, 1500); 
       
-      // On vide les champs
       document.getElementById("camion").value = "";
       document.getElementById("nom").value = "";
       document.getElementById("telephone").value = "";
@@ -270,7 +262,6 @@ document.addEventListener("DOMContentLoaded", () => {
       document.getElementById("commentaire").value = "";
       document.getElementById("confirme").checked = false;
 
-      // Réactivation du bouton
       submitBtn.disabled = false;
       submitBtn.style.opacity = "1";
       submitBtn.style.cursor = "pointer";
