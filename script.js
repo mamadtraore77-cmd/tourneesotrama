@@ -82,13 +82,13 @@ async function loadTable() {
     const payload = await jsonp(EXEC_URL);
 
     if (!payload || payload.ok === false) {
-      tbody.innerHTML = `<tr><td colspan="10" style="color:#b91c1c; text-align:center;">Erreur de connexion avec Google Sheets.</td></tr>`;
+      tbody.innerHTML = `<tr><td colspan="11" style="color:#b91c1c; text-align:center;">Erreur de connexion avec Google Sheets.</td></tr>`;
       return;
     }
 
     const values = payload.values; 
     if (!values || values.length < 2) {
-      tbody.innerHTML = `<tr><td colspan="10" style="text-align:center;color:#6b7280; padding:20px;">Aucun appel enregistré dans le tableau.</td></tr>`;
+      tbody.innerHTML = `<tr><td colspan="11" style="text-align:center;color:#6b7280; padding:20px;">Aucun appel enregistré dans le tableau.</td></tr>`;
       updateSyncTime();
       registeredPhones = [];
       return;
@@ -113,6 +113,7 @@ async function loadTable() {
       const commentaire = r[7] || "";
       const confirme = (r[8] || "Non").toString();
       const camion = r[9] || ""; 
+      const dateConteneur = r[10] || ""; // NOUVEAU CHAMP (Colonne K dans GSheets)
 
       countTotal++;
       if (confirme === "Oui") countConfirmes++;
@@ -122,14 +123,24 @@ async function loadTable() {
         registeredPhones.push(formatPhone(telephone));
       }
 
+      // Formatage de la date d'appel
       let dateAffichee = date;
       if(date.includes("T")) {
           dateAffichee = date.split("T")[0].split("-").reverse().join("/");
       }
 
+      // Formatage de la date du conteneur (si elle existe)
+      let dateConteneurAffichee = dateConteneur;
+      if(dateConteneur.includes("T")) {
+          dateConteneurAffichee = dateConteneur.split("T")[0].split("-").reverse().join("/");
+      } else if (dateConteneur && dateConteneur.includes("-") && dateConteneur.length === 10) {
+          dateConteneurAffichee = dateConteneur.split("-").reverse().join("/");
+      }
+
       const tr = document.createElement("tr");
       tr.innerHTML = `
         <td>${escapeHtml(dateAffichee)}</td>
+        <td><span style="font-weight:600; color:#0277bd;">${escapeHtml(dateConteneurAffichee)}</span></td>
         <td><span style="font-weight:600; color:#1b5e20;">${escapeHtml(camion)}</span></td>
         <td><strong>${escapeHtml(nom)}</strong></td>
         <td>${escapeHtml(telephone)}</td>
@@ -253,7 +264,9 @@ document.addEventListener("DOMContentLoaded", () => {
       status.textContent = "✅ Appel enregistré avec succès !";
       setTimeout(loadTable, 1500); 
       
+      // Remise à zéro de tous les champs
       document.getElementById("camion").value = "";
+      document.getElementById("date_conteneur").value = ""; // RAZ DU NOUVEAU CHAMP
       document.getElementById("nom").value = "";
       document.getElementById("telephone").value = "";
       document.getElementById("code_postal").value = "";
