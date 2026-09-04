@@ -4,6 +4,18 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0"/>
   <title>Registre des appels - SOTRAMA</title>
+
+  <!-- Icônes pour l'application mobile (iOS et Android) -->
+  <link rel="apple-touch-icon" href="https://sotrama.net/assets/img/logo.png">
+  <link rel="icon" sizes="192x192" href="https://sotrama.net/assets/img/logo.png">
+  <link rel="icon" sizes="512x512" href="https://sotrama.net/assets/img/logo.png">
+  
+  <!-- Comportement "Application" sans la barre d'adresse du navigateur -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="Appels SOTRAMA">
+
   <style>
     :root {
       --primary: #1b5e20;
@@ -254,7 +266,7 @@
   <div class="container">
     <div class="card">
       <div class="header">
-        <img src="logo.png" class="logo" alt="Logo SOTRAMA" onerror="this.style.display='none'">
+        <img src="https://sotrama.net/assets/img/logo.png" class="logo" alt="Logo SOTRAMA" onerror="this.style.display='none'">
         <h1 class="title">Registre des Appels</h1>
       </div>
       <h2>Nouvel enregistrement</h2>
@@ -273,7 +285,6 @@
             <input type="date" name="date" id="date" required>
           </div>
           
-          <!-- Modification ici : Le camion et la date de conteneur sont côte à côte -->
           <div>
             <label for="camion">Affectation Camion</label>
             <select name="camion" id="camion">
@@ -287,7 +298,6 @@
             </select>
           </div>
           
-          <!-- Nouveau champ ajouté -->
           <div>
             <label for="date_conteneur">Date du conteneur prévue</label>
             <input type="date" name="date_conteneur" id="date_conteneur">
@@ -368,7 +378,7 @@
           <thead>
             <tr>
               <th>Date Appel</th>
-              <th>Date Conteneur</th> <!-- Nouvelle colonne ajoutée ici -->
+              <th>Date Conteneur</th>
               <th>Camion</th>
               <th>Nom</th>
               <th>Téléphone</th>
