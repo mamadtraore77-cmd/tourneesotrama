@@ -1,0 +1,20 @@
+{
+  "name": "Registre Appels SOTRAMA",
+  "short_name": "SOTRAMA",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#f0f4f2",
+  "theme_color": "#1b5e20",
+  "icons": [
+    {
+      "src": "logo.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "logo.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
