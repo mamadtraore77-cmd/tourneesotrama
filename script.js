@@ -82,13 +82,13 @@ async function loadTable() {
     const payload = await jsonp(EXEC_URL);
 
     if (!payload || payload.ok === false) {
-      tbody.innerHTML = `<tr><td colspan="11" style="color:#b91c1c; text-align:center;">Erreur de connexion avec Google Sheets.</td></tr>`;
+      tbody.innerHTML = `<tr><td colspan="12" style="color:#b91c1c; text-align:center;">Erreur de connexion avec Google Sheets.</td></tr>`;
       return;
     }
 
     const values = payload.values; 
     if (!values || values.length < 2) {
-      tbody.innerHTML = `<tr><td colspan="11" style="text-align:center;color:#6b7280; padding:20px;">Aucun appel enregistré dans le tableau.</td></tr>`;
+      tbody.innerHTML = `<tr><td colspan="12" style="text-align:center;color:#6b7280; padding:20px;">Aucun appel enregistré dans le tableau.</td></tr>`;
       updateSyncTime();
       registeredPhones = [];
       return;
@@ -113,7 +113,8 @@ async function loadTable() {
       const commentaire = r[7] || "";
       const confirme = (r[8] || "Non").toString();
       const camion = r[9] || ""; 
-      const dateConteneur = r[10] || ""; // NOUVEAU CHAMP (Colonne K dans GSheets)
+      const dateConteneur = r[10] || ""; 
+      const estimationPrix = r[11] || ""; // <--- NOUVEAU CHAMP LU ICI (Colonne L)
 
       countTotal++;
       if (confirme === "Oui") countConfirmes++;
@@ -129,7 +130,7 @@ async function loadTable() {
           dateAffichee = date.split("T")[0].split("-").reverse().join("/");
       }
 
-      // Formatage de la date du conteneur (si elle existe)
+      // Formatage de la date du conteneur
       let dateConteneurAffichee = dateConteneur;
       if(dateConteneur.includes("T")) {
           dateConteneurAffichee = dateConteneur.split("T")[0].split("-").reverse().join("/");
@@ -147,6 +148,7 @@ async function loadTable() {
         <td>${escapeHtml(cp)}</td>
         <td>${escapeHtml(ville)}</td>
         <td style="max-width: 180px; overflow: hidden; text-overflow: ellipsis;">${escapeHtml(adresse)}</td>
+        <td><span style="font-weight:bold; color:#d97706;">${escapeHtml(estimationPrix ? estimationPrix + ' €' : '')}</span></td>
         <td>${escapeHtml(utilisateur)}</td>
         <td style="text-align:center;">${confirmeBadge(confirme === "Oui" ? "Oui" : "Non")}</td>
         <td style="max-width: 220px; overflow: hidden; text-overflow: ellipsis;">${escapeHtml(commentaire)}</td>
@@ -189,7 +191,6 @@ document.addEventListener("DOMContentLoaded", () => {
   const cpInput = document.getElementById("code_postal");
   const villeInput = document.getElementById("ville");
 
-  // 1. Saisie du Code Postal => Remplissage de la Ville
   cpInput.addEventListener("input", async function () {
     const cp = this.value;
     if (cp.length === 5) { 
@@ -209,7 +210,6 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
-  // 2. Saisie de la Ville => Remplissage du Code Postal
   let timeoutVille; 
   villeInput.addEventListener("input", function () {
     clearTimeout(timeoutVille); 
@@ -223,7 +223,6 @@ document.addEventListener("DOMContentLoaded", () => {
           
           if (data && data.length > 0 && data[0].codesPostaux) {
             cpInput.value = data[0].codesPostaux[0]; 
-            
             cpInput.style.borderColor = "#28a745"; 
             cpInput.style.backgroundColor = "#e8f5e9";
             setTimeout(() => {
@@ -266,7 +265,8 @@ document.addEventListener("DOMContentLoaded", () => {
       
       // Remise à zéro de tous les champs
       document.getElementById("camion").value = "";
-      document.getElementById("date_conteneur").value = ""; // RAZ DU NOUVEAU CHAMP
+      document.getElementById("date_conteneur").value = ""; 
+      document.getElementById("estimation_prix").value = ""; // RAZ DU NOUVEAU CHAMP
       document.getElementById("nom").value = "";
       document.getElementById("telephone").value = "";
       document.getElementById("code_postal").value = "";
